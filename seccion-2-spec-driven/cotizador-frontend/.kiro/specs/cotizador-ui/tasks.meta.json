@@ -1,0 +1,560 @@
+{
+  "pbtResults": {
+    "3.2 Escribir propiedad PBT-01 — Subtotal es la suma exacta": {
+      "status": "passed",
+      "lastRunTimestamp": 1787282644379
+    },
+    "3.4 Escribir propiedad PBT-02 — Total con urgencia aplica el factor correctamente": {
+      "status": "passed",
+      "lastRunTimestamp": 1787282647698
+    },
+    "3.5 Escribir propiedad PBT-03 — Total sin urgencia es igual al Subtotal": {
+      "status": "passed",
+      "lastRunTimestamp": 1787282651017
+    }
+  },
+  "executionHistory": {
+    "1. Configurar entorno de pruebas y estructura de archivos": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282085327
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282535716
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282538909
+      }
+    ],
+    "2.1 Crear `index.html` con estructura HTML semántica completa": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282085877
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282096748
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282161412
+      }
+    ],
+    "2.2 Declarar `CONFIG` dentro del `<script>` de `index.html`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282086905
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282097570
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282162341
+      }
+    ],
+    "3.1 Implementar `calcEngine.calcularSubtotal` en `src/calcEngine.js`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087106
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282171271
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282519841
+      }
+    ],
+    "3.3 Implementar `calcEngine.calcularTotal` en `src/calcEngine.js`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087236
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282171799
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282520586
+      }
+    ],
+    "3.6 Implementar `calcEngine.formatearMoneda` en `src/calcEngine.js`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087339
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282172799
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282521417
+      }
+    ],
+    "4. Checkpoint — Pruebas de calcEngine": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087429
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282542816
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282717681
+      }
+    ],
+    "5.1 Implementar `uiController.init` dentro del `<script>` de `index.html`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087517
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282739746
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282928640
+      }
+    ],
+    "5.2 Implementar `uiController.syncButtonState`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087633
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282740629
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282929616
+      }
+    ],
+    "6.1 Implementar `uiController.renderDesglose`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087849
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282937509
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282945298
+      }
+    ],
+    "7.1 Implementar `uiController.handleCotizar`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282087952
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282938179
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282946769
+      }
+    ],
+    "7.2 Implementar `uiController.markDesglosStale`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088032
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282938916
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282946044
+      }
+    ],
+    "7.3 Implementar `uiController.showError` y `uiController.clearError`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088131
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282939698
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282944762
+      }
+    ],
+    "8.1 Conectar `markDesglosStale` a los listeners de cambio de checkboxes y urgencia (verificar que `init` los registra correctamente tras los pasos anteriores)": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088218
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282940632
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282947870
+      }
+    ],
+    "9. Checkpoint — Pruebas de uiController": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088290
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282952628
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787283523005
+      }
+    ],
+    "10.1 Escribir el bloque `<style>` en `index.html`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088375
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787283527350
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787284925980
+      }
+    ],
+    "11.1 Copiar/incrustar el contenido final de `src/calcEngine.js` dentro del `<script>` de `index.html` junto con `CONFIG` y `uiController`; llamar `uiController.init()` al final del script": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088466
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787284932559
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285131907
+      }
+    ],
+    "12. Checkpoint final — Verificación completa": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282088548
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285136875
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285216016
+      }
+    ],
+    "2. Implementar el módulo `CONFIG` y el esqueleto de `index.html`": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282162513
+      }
+    ],
+    "3. Implementar `calcEngine` (lógica pura)": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282521599
+      }
+    ],
+    "5. Implementar `uiController` — inicialización y generación dinámica del DOM": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282929827
+      }
+    ],
+    "6. Implementar `uiController` — renderizado del desglose": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282945491
+      }
+    ],
+    "7. Implementar `uiController` — manejo de errores y estado stale": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282946931
+      }
+    ],
+    "8. Implementar indicador de desactualizado y su ciclo de vida": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787282948002
+      }
+    ],
+    "10. Aplicar estilos CSS y restricciones visuales": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787284926408
+      }
+    ],
+    "11. Integrar `calcEngine` embebido en `index.html` y smoke tests": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285132035
+      }
+    ],
+    "2.3 Escribir pruebas unitarias de estado inicial del DOM (U-01, U-02, U-03, U-05, U-09, U-10, U-11)": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285229803
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285240047
+      }
+    ],
+    "3.2 Escribir propiedad PBT-01 — Subtotal es la suma exacta": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285230627
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285236963
+      }
+    ],
+    "3.4 Escribir propiedad PBT-02 — Total con urgencia aplica el factor correctamente": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285231418
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285237591
+      }
+    ],
+    "3.5 Escribir propiedad PBT-03 — Total sin urgencia es igual al Subtotal": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285232182
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285238400
+      }
+    ],
+    "5.3 Escribir propiedad PBT-04 — Estado del botón Cotizar": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285233216
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285240237
+      }
+    ],
+    "5.4 Escribir prueba unitaria U-06 — click en botón disabled no produce cambios": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285244541
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285252600
+      }
+    ],
+    "6.2 Escribir propiedad PBT-05 — Formato del desglose": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285245724
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285253460
+      }
+    ],
+    "6.3 Escribir propiedad PBT-06 — Desglose refleja únicamente la selección más reciente": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285246732
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285254273
+      }
+    ],
+    "7.4 Escribir prueba unitaria U-07 — Cotizar sin Tipo_de_Calzado produce error": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285248231
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285255108
+      }
+    ],
+    "7.5 Escribir prueba unitaria U-08 — Cotizar con selección válida muestra desglose": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285249209
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285256033
+      }
+    ],
+    "7.6 Escribir propiedad PBT-08 — Cotizar sin tipo de calzado siempre produce error": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285260126
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285269769
+      }
+    ],
+    "7.7 Escribir prueba unitaria U-12 — Error de recálculo conserva desglose previo como stale": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285261393
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285271484
+      }
+    ],
+    "8.2 Escribir propiedad PBT-07 — Cambio tras cotizar activa indicador de desactualizado": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285262675
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285270597
+      }
+    ],
+    "10.2 Escribir prueba unitaria U-05 — Estilos del botón disabled": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285263632
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285268117
+      }
+    ],
+    "11.2 Escribir smoke tests S-01, S-02, S-03, S-04": [
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285264580
+      },
+      {
+        "executionId": "5fa14847-9350-4d93-a912-84dad31175cc",
+        "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
+        "timestamp": 1787285268940
+      }
+    ]
+  }
+}
