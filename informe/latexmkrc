@@ -1,0 +1,13 @@
+# Configuración de latexmk para este documento.
+# Renombrar a .latexmkrc (con punto) si se prefiere que sea un archivo oculto.
+
+$pdf_mode = 1;          # compilar con pdflatex
+$bibtex_use = 2;        # ejecutar biber y limpiar sus archivos con latexmk -c
+$biber = 'biber %O %S';
+
+# Archivos intermedios que latexmk debe considerar suyos al limpiar.
+push @generated_exts, 'bbl', 'run.xml', 'lof', 'lot', 'synctex.gz';
+
+# SyncTeX: genera informe.synctex.gz, el índice que permite saltar del PDF
+# al .tex (búsqueda inversa) y del .tex al PDF (búsqueda directa).
+$synctex = 1;

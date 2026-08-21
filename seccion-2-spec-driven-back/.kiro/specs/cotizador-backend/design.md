@@ -780,9 +780,9 @@ Las siguientes propiedades son adecuadas para property-based testing porque invo
 
 ### Property 15: Shape de ProblemDetails en toda respuesta de error
 
-*Para cualquier* request rechazado — por validación semántica o por cuerpo malformado — la respuesta debe tener `Content-Type: application/problem+json`, `status == 400` coincidente con el código HTTP, un `type` no vacío, un `title` no vacío y un `detail` no vacío. Cuando hay más de una causa, `errors` contiene una entrada por campo afectado y el `type` corresponde a la causa de mayor precedencia según el Requirement 5.7.
+*Para cualquier* request rechazado — por validación semántica o por cuerpo malformado — la respuesta debe tener `Content-Type: application/problem+json`, `status == 400` coincidente con el código HTTP, un `type` no vacío, un `title` no vacío, un `detail` no vacío y un `instance` igual a la ruta de la petición. Cuando hay más de una causa, `errors` contiene una entrada por campo afectado y el `type` corresponde a la causa de mayor precedencia según el Requirement 5.7.
 
-**Validates: Requirements 5.1, 5.6, 5.7**
+**Validates: Requirements 5.1, 5.6, 5.7, 5.9**
 
 ---
 
@@ -849,7 +849,7 @@ El orden de esta tabla es también el **orden de precedencia** para elegir el `t
    - `valoresInvalidos` se **omite** cuando la lista está vacía, en lugar de emitir `[]`: en `reparaciones-requeridas` no hay valores que reportar y el Requirement 5.2 solo exige `field`.
    - La propiedad `errors` completa se omite cuando no hay ningún campo que señalar — el único caso es un cuerpo tan malformado que Jackson no aporta ruta (p. ej. `{"a":,,}`).
 
-   Spring añade además `instance` con la ruta de la petición; no es parte del contrato pero aparece en toda respuesta de error.
+   Spring añade además `instance` con la ruta de la petición. Está declarado en el contrato OpenAPI y exigido por el Requirement 5.9, así que el handler no debe suprimirlo.
 
 ```java
 @RestControllerAdvice
@@ -943,7 +943,8 @@ Estos tres casos son los escenarios Gherkin del Anexo C y la base del guion de v
 
 **Infrastructure (`infrastructure/`):**
 - `CotizacionController` (`@WebMvcTest`): deserialización con `urgente` ausente; serialización de `CotizacionResponse`; código 201.
-- `ProblemDetailsExceptionHandler`: cada fila de la tabla de mapeo produce el `type`, `title`, `status` y `Content-Type: application/problem+json` correctos.
+- `ProblemDetailsExceptionHandler`: cada fila de la tabla de mapeo produce el `type`, `title`, `status`, `instance` y `Content-Type: application/problem+json` correctos.
+- `CotizacionController` con propiedades desconocidas en el cuerpo (p. ej. `{"tipoCalzadoId":"1","tipoReparacionIds":["1"],"colorFavorito":"azul"}`): se ignoran y la respuesta es 201, no 400 (Requirement 5.8). Depende de que `FAIL_ON_UNKNOWN_PROPERTIES` quede deshabilitado — es el default de Spring Boot, pero conviene fijarlo explícitamente para que no dependa de una versión.
 - `CatalogoSemillaConfig`: el catálogo semilla contiene exactamente los 3 calzados y 4 reparaciones del Requirement 7, con sus valores; un dato inválido aborta la construcción.
 - `InMemoryCotizacionRepositoryAdapter`: arranca vacío; `save` almacena y devuelve la instancia.
 - Los adaptadores de catálogo no exponen operaciones de escritura (verificable por reflexión o por revisión de la interfaz).

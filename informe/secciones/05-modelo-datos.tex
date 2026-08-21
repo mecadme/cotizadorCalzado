@@ -1,0 +1,92 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  5. Modelo de datos
+%
+%  Lo que se evalúa aquí no es solo que las tablas estén normalizadas, sino
+%  que el reparto de los datos entre las piezas del sistema esté razonado.
+% ===========================================================================
+
+\section{Modelo de datos}
+\label{sec:modelo-datos}
+
+\subsection{Estrategia de persistencia}
+\label{sec:estrategia-datos}
+
+\instruccion{Explica el reparto: qué almacén pertenece a qué pieza y qué
+principio se sigue. Si se tomó un atajo respecto del diseño ideal — una sola
+instancia del motor en lugar de varias, por ejemplo — dilo aquí y
+justifícalo: es una pregunta previsible en la defensa.}
+
+\ph{Cómo se reparten los datos, qué implica ese reparto y cómo se garantiza.}
+
+\begin{table}[H]
+  \centering
+  \caption{Reparto de almacenes de datos.}
+  \label{tab:bases}
+  \begin{tabular}{L{3.2cm} L{3.4cm} L{6.6cm}}
+    \toprule
+    \textbf{Almacén} & \textbf{Pieza dueña} & \textbf{Contenido} \\
+    \midrule
+    \id{\ph{...}} & \id{\ph{...}} & \ph{...} \\
+    \id{\ph{...}} & \id{\ph{...}} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Diagrama entidad-relación}
+\label{sec:der}
+
+\instruccion{Un DER por almacén, o uno global con las fronteras marcadas. Lo
+segundo comunica mejor la independencia de los datos, que es justo lo que se
+evalúa. La figura se espera en \texttt{figuras/modelo-datos.pdf}.}
+
+\begin{figure}[H]
+  \centering
+  \diagrama{modelo-datos}
+  \caption{Modelo entidad-relación, con la frontera de cada almacén.}
+  \label{fig:der}
+\end{figure}
+
+\subsection{Diccionario de datos}
+\label{sec:diccionario}
+
+\instruccion{Una tabla por entidad. No hace falta repetir todos los tipos
+SQL: basta el campo, su tipo lógico y qué significa. Los tipos exactos están
+en los scripts del anexo. Repite la tabla una vez por entidad relevante.}
+
+\begin{table}[H]
+  \centering
+  \caption{Entidad \id{\ph{nombre}}.}
+  \label{tab:dic-entidad}
+  \begin{tabular}{L{3.4cm} L{3.2cm} L{6.6cm}}
+    \toprule
+    \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\
+    \midrule
+    \ph{...} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Integridad entre almacenes}
+\label{sec:integridad}
+
+\instruccion{Es el apartado que más distingue un diseño distribuido de un
+monolito con varias tablas. Explica qué referencias cruzan la frontera entre
+almacenes, por qué no pueden ser claves foráneas y dónde se valida entonces
+la integridad. Si el sistema tiene un solo almacén, sustituye este apartado
+por las restricciones de integridad referencial y dilo.}
+
+\ph{Referencias lógicas sin clave foránea: cuáles son, dónde se validan y
+qué ocurre si la validación falla.}
+
+\subsection{Restricciones que implementan reglas de negocio}
+\label{sec:restricciones}
+
+\instruccion{Qué reglas de la \cref{sec:reglas-negocio} están sostenidas por
+el propio motor de base de datos, y por qué ahí y no en el código. Es un
+argumento de concurrencia: una validación en la aplicación se puede saltar si
+dos peticiones llegan a la vez. Aquí va solo el mecanismo; el enunciado de la
+regla vive en la sección 6.}
+
+\ph{Restricciones e índices que sostienen las reglas y las consultas más
+frecuentes.}

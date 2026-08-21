@@ -1,0 +1,159 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  4. Arquitectura de la solución
+%
+%  Sección central del informe: la estructura del sistema y, sobre todo, su
+%  justificación. El modelo de datos va aparte, en la sección 5.
+%
+%  Deja las figuras en figuras/ con estos nombres, en PDF:
+%      contexto.pdf · contenedores.pdf · componentes.pdf · despliegue.pdf
+%  Si alguna falta, el documento compila igual y deja un recuadro visible
+%  en su lugar.
+% ===========================================================================
+
+\section{Arquitectura de la solución}
+\label{sec:arquitectura}
+
+\instruccion{Esta sección responde a una sola pregunta: por qué el sistema
+está partido así y no de otra manera. Describir los componentes es la parte
+fácil; lo que se evalúa es la justificación. Apóyate en las vistas para
+mostrar la estructura y en el registro de decisiones para explicarla.}
+
+\subsection{Visión general}
+\label{sec:vision-general}
+
+\ph{Dos o tres párrafos: qué estilo arquitectónico se aplica, en cuántas
+piezas se divide el sistema y qué principio gobierna el reparto.}
+
+\subsection{Notación}
+\label{sec:notacion}
+
+\instruccion{Di en qué notación están los diagramas y con qué herramienta se
+generaron. Si salen de una única descripción textual, dilo: es el argumento
+de que las vistas son consistentes entre sí por construcción.}
+
+Los diagramas siguen el modelo C4 \cite{ejemplo-web}: contexto, contenedores
+y componentes, más una vista de despliegue. \ph{Herramienta y fuente desde
+la que se generan.}
+
+\subsection{Vistas arquitectónicas}
+\label{sec:vistas}
+
+\instruccion{Una subsección por vista. En cada una: el diagrama, y debajo la
+prosa que explica lo que el diagrama no puede decir — por qué esa frontera,
+qué pasa si un elemento falla, qué se decidió a propósito. Un diagrama sin
+texto no comunica; un texto que solo enumera lo que ya se ve en el diagrama,
+tampoco. Quita las vistas que no apliquen en vez de dejarlas vacías.}
+
+\subsubsection{\texorpdfstring{\textsf{V-01}}{V-01} Contexto del sistema}
+\label{v:01}
+
+\begin{figure}[H]
+  \centering
+  \diagrama{contexto}
+  \caption{Vista de contexto: el sistema, sus usuarios y los sistemas
+           externos con los que se relaciona.}
+  \label{fig:contexto}
+\end{figure}
+
+\ph{Qué resuelve el sistema y para quién. Un párrafo.}
+
+\subsubsection{\texorpdfstring{\textsf{V-02}}{V-02} Contenedores}
+\label{v:02}
+
+\instruccion{Suele ser la vista principal del documento: es donde se ve la
+descomposición completa del sistema en piezas ejecutables. Si el diagrama no
+cabe legible en el bloque de texto, \texttt{\textbackslash diagramapagina}
+lo lleva a página completa.}
+
+\begin{figure}[p]
+  \thisfloatpagestyle{empty}
+  \centering
+  \diagramapagina{contenedores}
+  \caption{Vista de contenedores: piezas ejecutables del sistema y sus
+           almacenes de datos.}
+  \label{fig:contenedores}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Composición del sistema.}
+  \label{tab:componentes}
+  \begin{tabular}{L{3.4cm} L{6.4cm} L{3.6cm}}
+    \toprule
+    \textbf{Pieza} & \textbf{Responsabilidad} & \textbf{Tecnología} \\
+    \midrule
+    \id{\ph{...}} & \ph{...} & \ph{...} \\
+    \id{\ph{...}} & \ph{...} & \ph{...} \\
+    \id{\ph{...}} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\ph{Recorrido de la tabla: qué agrupa cada pieza y por qué la frontera cae
+donde cae. Si alguna no tiene almacén propio, explica de dónde saca los
+datos.}
+
+\paragraph*{Comunicación.}
+\ph{Qué pieza llama a cuál, con qué protocolo, y qué ocurre si el destino no
+responde.}
+
+\subsubsection{\texorpdfstring{\textsf{V-03}}{V-03} Componentes}
+\label{v:03}
+
+\instruccion{Detalla una sola pieza, la que concentre la lógica de negocio,
+y di explícitamente por qué esa y no otra. Un diagrama de componentes por
+cada pieza infla el documento sin añadir nada.}
+
+\begin{figure}[p]
+  \thisfloatpagestyle{empty}
+  \centering
+  \diagramapagina{componentes}
+  \caption{Vista de componentes de \id{\ph{pieza}}.}
+  \label{fig:componentes}
+\end{figure}
+
+\ph{Recorrido de una petición representativa a través de los componentes.}
+
+\subsubsection{\texorpdfstring{\textsf{V-04}}{V-04} Despliegue}
+\label{v:04}
+
+\begin{figure}[p]
+  \thisfloatpagestyle{empty}
+  \centering
+  \diagramapagina{despliegue}
+  \caption{Vista de despliegue: nodos de ejecución, redes y volúmenes.}
+  \label{fig:despliegue}
+\end{figure}
+
+\ph{Cómo se materializa la arquitectura en tiempo de ejecución: qué nodos y
+redes hay, qué aísla cada una y dónde persisten los datos. El detalle
+operativo (comandos, variables de entorno) va en el manual de despliegue, no
+aquí: duplicarlo garantiza que los dos se desincronicen.}
+
+\subsection{Seguridad y control de acceso}
+\label{sec:seguridad}
+
+\ph{Dónde se autentica el usuario, quién emite la credencial, quién la
+valida y cómo llega la identidad a cada pieza del sistema.}
+
+\subsection{Registro de decisiones de arquitectura}
+\label{sec:decisiones}
+
+\instruccion{Cada decisión relevante con su alternativa descartada. Una
+decisión sin alternativa no es una decisión: es una descripción. Este
+registro es lo que distingue un documento de arquitectura de un manual de
+usuario del propio sistema. Referencia las decisiones desde el texto con
+\texttt{\textbackslash adrref\{01\}}. Repite el bloque una vez por decisión.}
+
+\decision{01}{\ph{Título de la decisión}}
+  {\ph{Qué problema o fuerza obligó a decidir.}}
+  {\ph{Qué se decidió.}}
+  {\ph{Qué otra opción se consideró y por qué se descartó.}}
+  {\ph{Qué se gana y qué se paga por ello.}}
+
+\instruccion{Si no sabes por dónde empezar, las decisiones que casi siempre
+hay que justificar son: cómo se reparte la persistencia entre piezas; dónde
+se validan las reglas de negocio; si el acceso pasa por un punto único o
+cada cliente habla directamente con cada servicio; y qué se resuelve en
+tiempo de construcción frente a tiempo de ejecución.}

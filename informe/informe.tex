@@ -1,0 +1,75 @@
+% ===========================================================================
+%  Informe técnico — plantilla LaTeX
+%
+%  Compilar con:   make            (o bien: latexmk -pdf informe.tex)
+%  Limpiar:        make clean      (o bien: latexmk -c)
+%
+%  CÓMO USAR ESTA PLANTILLA
+%  ------------------------
+%  1. Rellena los datos del trabajo y de los autores en config/datos.tex.
+%  2. Escribe dentro de secciones/. Las cajas grises de «Instrucción»
+%     dicen qué va en cada sitio, y \ph{...} marca lo que falta.
+%  3. Deja las figuras en figuras/, preferiblemente en PDF.
+%  4. ANTES DE ENTREGAR, en config/plantilla.tex:
+%         \guiafalse          oculta las cajas de instrucción
+%         \marcadoresfalse    deja los [Insertar ...] en negro
+%     y añade  disable  a las opciones de todonotes para ocultar las
+%     notas de pendiente.
+%
+%  Añadir o quitar secciones se hace aquí, en la lista de \input del cuerpo:
+%  este archivo solo ensambla, no contiene texto del informe.
+% ===========================================================================
+
+\documentclass[12pt,a4paper,oneside]{article}
+
+\input{config/preambulo}
+\input{config/plantilla}
+\input{config/datos}
+
+\begin{document}
+
+% --- Páginas preliminares (numeración romana) ------------------------------
+\pagenumbering{roman}
+
+\input{config/portada}
+
+\input{secciones/00-resumen}
+
+\cleardoublepage
+\tableofcontents
+
+% Índices de figuras y tablas. Si el informe final no lleva alguno de los
+% dos, comenta la línea correspondiente en vez de dejar una página vacía.
+\cleardoublepage
+\listoffigures
+
+\cleardoublepage
+\listoftables
+
+% Índice de pendientes. Útil mientras se escribe; coméntalo al entregar.
+\cleardoublepage
+\listoftodos[Pendientes]
+
+% --- Cuerpo del informe ----------------------------------------------------
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{secciones/01-introduccion}
+\input{secciones/02-objetivos}
+\input{secciones/03-alcance-funcional}
+\input{secciones/04-arquitectura}
+\input{secciones/05-modelo-datos}
+\input{secciones/06-reglas-negocio}
+\input{secciones/07-resultados}
+\input{secciones/08-conclusiones}
+
+% --- Referencias -----------------------------------------------------------
+\cleardoublepage
+\printbibliography[heading=bibintoc,title={Referencias}]
+
+% --- Anexos ----------------------------------------------------------------
+\appendix
+\input{secciones/A-anexos}
+
+\end{document}

@@ -1,0 +1,52 @@
+# Archivos intermedios de LaTeX — no versionar.
+#
+# OJO: .gitignore NO admite comentarios al final de una línea de patrón.
+# «*.tdo   # todonotes» hace que git busque un archivo llamado literalmente
+# «*.tdo   # todonotes» y la regla no ignora nada. Los comentarios van en su
+# propia línea, como estos.
+
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+
+# De los paquetes que usa esta plantilla:
+# .tdo — lista de pendientes de todonotes
+# .lol — índice de listados de listings
+# .brf — backref de hyperref
+# .upa/.upb — tcolorbox
+*.tdo
+*.lol
+*.loa
+*.brf
+*.upa
+*.upb
+
+# beamer, por si se reaprovecha la plantilla para la presentación final
+*.nav
+*.snm
+*.vrb
+
+# Respaldos y temporales de editores LaTeX
+*.bak
+.texpadtmp/
+
+# El PDF generado: descomentar la línea siguiente si se prefiere no
+# versionarlo. Muchos equipos sí lo versionan para tener a mano la última
+# versión compilada sin instalar LaTeX.
+# informe.pdf
+
+# NOTA: figuras/*.pdf SÍ se versiona. Son las figuras del informe, no
+# archivos intermedios: sin ellas el documento compila, pero sale con los
+# recuadros de «Falta figuras/...». Si regenerarlas exige herramientas que no
+# todo el equipo tiene instaladas, conviene aún más que estén en el repo.

@@ -1,0 +1,61 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  3. Alcance funcional
+%
+%  Qué hace el sistema y qué deliberadamente no hace. Es contexto para las
+%  secciones de arquitectura, no el capítulo principal: basta con recoger
+%  las funcionalidades de forma compacta y señalar lo que se acotó.
+% ===========================================================================
+
+\section{Alcance funcional}
+\label{sec:alcance}
+
+\subsection{Roles y permisos}
+\label{sec:roles}
+
+\instruccion{Una matriz de funcionalidad por rol se lee de un vistazo y
+evita párrafos repetitivos. Marca con «Sí» y «No»; si algún permiso depende
+de una condición (por ejemplo, actuar solo sobre lo propio), dilo en la
+celda. Añade una columna por rol que exista de verdad.}
+
+\begin{table}[H]
+  \centering
+  \caption{Matriz de roles y permisos.}
+  \label{tab:roles}
+  \begin{tabular}{L{6.2cm} C{2.6cm} C{2.6cm}}
+    \toprule
+    \textbf{Funcionalidad} & \ph{Rol 1} & \ph{Rol 2} \\
+    \midrule
+    \ph{...} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Módulos y pantallas}
+\label{sec:modulos}
+
+\instruccion{Los módulos funcionales con sus pantallas. Conviene que esta
+tabla case con las piezas de la \cref{tab:componentes}: si un módulo no
+corresponde a ninguna pieza, o al revés, es señal de que la descomposición
+no está clara.}
+
+\begin{table}[H]
+  \centering
+  \caption{Módulos y pantallas del sistema.}
+  \label{tab:modulos}
+  \begin{tabular}{L{3.2cm} L{4.4cm} L{5.4cm}}
+    \toprule
+    \textbf{Módulo} & \textbf{Pantalla} & \textbf{Descripción} \\
+    \midrule
+    \ph{...} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Fuera de alcance}
+\label{sec:fuera-alcance}
+
+\instruccion{Enumera lo excluido. No es una disculpa: delimitar el alcance
+es una decisión de diseño, y declararla evita que se lea como una carencia.}
+
+\ph{Funcionalidades excluidas y el motivo.}

@@ -1,0 +1,171 @@
+% !TeX root = ../informe.tex
+%=======================================================================
+%  config/preambulo.tex — paquetes, idioma y estilo visual
+%
+%  Nada de este archivo es específico del proyecto: solo define cómo se ve
+%  el documento. Lo propio de la plantilla (cajas de instrucción,
+%  marcadores de relleno, identificadores trazables, inclusión de
+%  diagramas) vive en config/plantilla.tex.
+%=======================================================================
+
+%----------------------- Codificación e idioma -------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla,es-noquoting]{babel}   % es-tabla: «Tabla», no «Cuadro»
+\usepackage{csquotes}                               % biblatex lo exige con babel
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% amsmath debe cargarse antes que cleveref, o cleveref aborta la compilación.
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%------------------------------ Geometría ------------------------------
+\usepackage[a4paper,top=2.6cm,bottom=2.6cm,left=2.8cm,right=2.5cm,
+            headheight=16pt]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+%------------------------------- Tablas --------------------------------
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{xltabular}      % tabularx que además parte entre páginas
+\usepackage{ragged2e}
+\usepackage{multirow}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+%--------------------------- Gráficos y color --------------------------
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\graphicspath{{figuras/}}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% floatpag permite quitar el folio de la página de un float: \thispagestyle
+% no vale ahí dentro, porque el estilo se fija al componer la página y no
+% al encajonar el float. Lo necesitan los diagramas a página completa.
+%
+% ORDEN OBLIGATORIO: floatpag ANTES que float. Los dos redefinen \@float;
+% al revés, floatpag pisa el parche de float y la opción [H] deja de
+% existir («Unknown float option `H'» en cada tabla que la usa).
+\usepackage{floatpag}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{rotating}       % sidewaysfigure, para diagramas anchos
+\usepackage{pifont}
+
+%------------------------------ Listas ---------------------------------
+\usepackage{enumitem}
+\setlist{itemsep=2pt,parsep=0pt,topsep=4pt}
+
+%--------------------------- Código fuente -----------------------------
+\usepackage{listings}
+
+\definecolor{codeFondo}{HTML}{F7F7F7}
+\definecolor{codeComentario}{HTML}{6A737D}
+\definecolor{codePalabra}{HTML}{0B5394}
+\definecolor{codeCadena}{HTML}{9C27B0}
+\definecolor{codeBorde}{HTML}{DDDDDD}
+
+\lstdefinestyle{estilobase}{
+    backgroundcolor = \color{codeFondo},
+    basicstyle      = \ttfamily\footnotesize,
+    commentstyle    = \color{codeComentario}\itshape,
+    keywordstyle    = \color{codePalabra}\bfseries,
+    stringstyle     = \color{codeCadena},
+    numbers         = left,
+    numberstyle     = \tiny\color{codeComentario},
+    numbersep       = 8pt,
+    frame           = single,
+    rulecolor       = \color{codeBorde},
+    breaklines      = true,
+    breakatwhitespace = false,
+    showstringspaces  = false,
+    tabsize         = 2,
+    captionpos      = b,
+    xleftmargin     = 12pt,
+    literate = % acentos y eñes dentro de los bloques de código
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {¿}{{?`}}1 {¡}{{!`}}1
+}
+\lstset{style=estilobase}
+
+% Lenguajes que aparecen en este proyecto. Uso:
+%   \begin{lstlisting}[language=Java,caption={...},label={lst:...}]
+\lstdefinelanguage{yaml}{
+    keywords        = {true,false,null,version,services,image,build,ports,
+                       environment,volumes,networks,depends_on,profiles,name},
+    keywordstyle    = \color{codePalabra}\bfseries,
+    sensitive       = false,
+    comment         = [l]{\#},
+    morestring      = [b]",
+    morestring      = [b]'
+}
+\lstdefinelanguage{json}{
+    string          = [b]",
+    morestring      = [b]',
+    literate        = {:}{{{\color{codePalabra}:}}}1 {,}{{{\color{codePalabra},}}}1,
+    sensitive       = false
+}
+
+%--------------------------- Estilo de página --------------------------
+\definecolor{acento}{HTML}{1168BD}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% La primera página de cada sección usa el estilo «plain»; se ajusta para
+% que también muestre el número de página arriba a la derecha.
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[R]{\small\thepage}%
+    \renewcommand{\headrulewidth}{0pt}%
+}
+
+% Este documento es «article»: el nivel superior es \section. Se le da el
+% peso visual que en la plantilla original tenía \chapter.
+\usepackage{titlesec}
+\titleformat{\section}[hang]
+  {\normalfont\Large\bfseries\color{acento}}
+  {\thesection.}{10pt}{}
+\titlespacing*{\section}{0pt}{18pt}{10pt}
+
+% Los rótulos internos que no deben entrar al índice se escriben con
+% \paragraph* (titlesec no respeta \setcounter{tocdepth} en los niveles
+% que gestiona).
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}    % el índice llega hasta x.y; x.y.z no aporta
+
+%----------------------- Referencias cruzadas --------------------------
+\usepackage[hidelinks]{hyperref}
+% El idioma va explícito: sin él, cleveref rotula «Section 6» en inglés
+% aunque babel esté en español.
+\usepackage[spanish,nameinlink,capitalise]{cleveref}
+% cleveref en español rotula las tablas como «Cuadro», pero babel con la
+% opción es-tabla titula los pies como «Tabla». Sin esto, la prosa diría
+% «Cuadro 3» y el pie de la misma tabla, «Tabla 3». Van capitalizadas las
+% dos para no anular la opción «capitalise».
+\crefname{table}{Tabla}{Tablas}
+\Crefname{table}{Tabla}{Tablas}
+
+%------------------------- Bibliografía --------------------------------
+% Estilo IEEE, habitual en ingeniería. Requiere biber, que latexmk ya
+% ejecuta solo.
+\usepackage[backend=biber,style=ieee,sorting=nyt]{biblatex}
+\addbibresource{referencias.bib}

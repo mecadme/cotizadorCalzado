@@ -1,0 +1,62 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  Portada. Los datos se toman de config/datos.tex — no editar aquí.
+% ===========================================================================
+
+% Imprime un integrante (nombre + correo). Si el nombre está vacío, no
+% imprime nada: así sobran entradas en datos.tex sin dejar huecos.
+\newcommand{\integrante}[2]{%
+    \ifx\relax#1\relax\else
+        {\large #1\par}%
+        {\small\ttfamily #2\par}%
+        \vspace{8pt}%
+    \fi
+}
+
+\begin{titlepage}
+\centering
+\thispagestyle{empty}
+% Interlineado sencillo solo en la portada: con el 1.5 del cuerpo, cuatro
+% integrantes con correo desbordan a una segunda página.
+\singlespacing
+
+% Descomentar cuando se tenga el logotipo en figuras/logo.png
+% \includegraphics[width=0.28\textwidth]{logo.png}\\[1.5cm]
+
+{\scshape\large \nombreUniversidad\par}
+\vspace{0.4cm}
+{\scshape\large \nombrePrograma\par}
+\vspace{0.2cm}
+{\large \nombreCurso\par}
+
+\vspace{1.6cm}
+
+\rule{\textwidth}{0.4pt}\\[0.5cm]
+{\huge\bfseries \tituloInforme\par}
+\vspace{0.4cm}
+{\Large \subtituloInforme\par}
+\rule{\textwidth}{0.4pt}\\[0.5cm]
+
+{\large \tipoTrabajo\par}
+
+\vfill
+
+{\large\bfseries Autores\par}
+\vspace{0.4cm}
+
+\integrante{\autorUno}{\correoUno}
+\integrante{\autorDos}{\correoDos}
+\integrante{\autorTres}{\correoTres}
+\integrante{\autorCuatro}{\correoCuatro}
+
+\vspace{0.4cm}
+
+{\large\bfseries Docente\par}
+\vspace{0.25cm}
+{\large \nombreDocente\par}
+
+\vfill
+
+{\large \ciudadFecha\par}
+
+\end{titlepage}

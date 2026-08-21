@@ -1,0 +1,39 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  Datos de la portada y metadatos del PDF.
+%  Este es el único archivo que hay que editar con los datos del trabajo.
+% ===========================================================================
+
+\newcommand{\tituloInforme}{Título del informe}
+\newcommand{\subtituloInforme}{Subtítulo o alcance del trabajo}
+\newcommand{\nombreCurso}{Nombre del curso}
+\newcommand{\nombrePrograma}{Nombre del programa}
+\newcommand{\nombreUniversidad}{Nombre de la institución}
+\newcommand{\tipoTrabajo}{Tipo de trabajo}
+
+% --- Integrantes del equipo ------------------------------------------------
+% Un par nombre/correo por integrante. Dejar vacíos los que sobren: la
+% portada omite automáticamente los que estén en blanco.
+\newcommand{\autorUno}{Nombre del primer autor}
+\newcommand{\correoUno}{correo@ejemplo.org}
+
+\newcommand{\autorDos}{}
+\newcommand{\correoDos}{}
+
+\newcommand{\autorTres}{}
+\newcommand{\correoTres}{}
+
+\newcommand{\autorCuatro}{}
+\newcommand{\correoCuatro}{}
+
+\newcommand{\nombreDocente}{Nombre del docente}
+\newcommand{\ciudadFecha}{Ciudad, \today}
+
+% --- Metadatos del PDF -----------------------------------------------------
+% pdfauthor con varios autores: sepáralos con comas dentro de la clave.
+\hypersetup{
+    pdftitle  = {\tituloInforme},
+    pdfauthor = {\autorUno},
+    pdfsubject= {\nombreCurso\ --- \nombrePrograma},
+    pdfkeywords = {palabra clave, palabra clave, palabra clave}
+}
