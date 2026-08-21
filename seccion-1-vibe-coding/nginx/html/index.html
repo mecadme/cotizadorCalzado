@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taller DAE – Ambiente de Desarrollo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      padding: 3rem 4rem;
+      max-width: 640px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #0ea5e9;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .service {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+
+    .service .icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .service .name { font-weight: 600; font-size: 0.9rem; color: #e2e8f0; }
+    .service .status {
+      font-size: 0.75rem;
+      color: #22c55e;
+      margin-top: 0.25rem;
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: #475569;
+      border-top: 1px solid #334155;
+      padding-top: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Ambiente Local</span>
+    <h1>Bienvenido al Taller DAE</h1>
+    <p class="subtitle">
+      Ambiente de desarrollo y pruebas levantado con Docker Compose.<br>
+      Maestría en Desarrollo de Aplicaciones Empresariales – UPS.
+    </p>
+
+    <div class="services">
+      <div class="service">
+        <div class="icon">🐬</div>
+        <div class="name">MySQL 8</div>
+        <div class="status">● Activo</div>
+      </div>
+      <div class="service">
+        <div class="icon">🌐</div>
+        <div class="name">Nginx</div>
+        <div class="status">● Activo</div>
+      </div>
+    </div>
+
+    <footer>
+      Puerto 8080 &nbsp;|&nbsp; Base de datos: <strong>tallerdae</strong>
+    </footer>
+  </div>
+</body>
+</html>

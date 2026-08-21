@@ -1,0 +1,75 @@
+# ============================================================
+# Docker Compose – Ambiente de Desarrollo Taller DAE
+# Uso: docker compose up -d
+# ============================================================
+
+services:
+
+  # ── Base de datos MySQL 8 ────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: tallerdae-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE}
+      MYSQL_USER:          ${MYSQL_USER}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql       # persistencia de datos
+      - ./mysql/init:/docker-entrypoint-initdb.d  # scripts SQL de inicialización (opcional)
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tallerdae-net
+
+  # ── Servidor web Nginx ───────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: tallerdae-nginx
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro   # configuración principal
+      - ./nginx/html:/usr/share/nginx/html:ro         # contenido estático
+      - ./nginx/logs:/var/log/nginx                   # logs accesibles desde la máquina host
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tallerdae-net
+
+  # ── Backend (placeholder – descomentar cuando esté listo) ─
+  # backend:
+  #   build: ./backend
+  #   container_name: tallerdae-backend
+  #   restart: unless-stopped
+  #   environment:
+  #     DB_HOST: mysql
+  #     DB_PORT: 3306
+  #     DB_NAME: ${MYSQL_DATABASE}
+  #     DB_USER: ${MYSQL_USER}
+  #     DB_PASS: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #   networks:
+  #     - tallerdae-net
+
+# ── Volúmenes ────────────────────────────────────────────
+volumes:
+  mysql_data:
+    driver: local
+
+# ── Red interna ──────────────────────────────────────────
+networks:
+  tallerdae-net:
+    driver: bridge
