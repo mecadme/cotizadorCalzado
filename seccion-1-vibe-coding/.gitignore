@@ -1,0 +1,8 @@
+# Credenciales – nunca subir al repositorio
+.env
+
+# Datos persistentes de MySQL (si se mapean localmente)
+mysql/data/
+
+# Logs de Nginx
+nginx/logs/
