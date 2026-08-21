@@ -63,7 +63,8 @@ public final class Dinero {
 
     /**
      * Multiplica el monto por el porcentaje dado y redondea a escala 2 con HALF_UP.
-     * Útil para calcular recargos (p. ej. 0.30 para el 30 %).
+     * Útil para calcular recargos; el porcentaje concreto lo aporta la estrategia
+     * de pricing, que es su única fuente (Req 4.4).
      */
     public Dinero aplicarPorcentaje(BigDecimal porcentaje) {
         Objects.requireNonNull(porcentaje, "porcentaje no puede ser nulo");
