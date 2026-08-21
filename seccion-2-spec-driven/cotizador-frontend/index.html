@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador de Calzado</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-size: 15px; line-height: 1.5; color: #1a1a1a; background-color: #f5f5f5;
+      min-height: 100vh; overflow-x: hidden;
+    }
+    header { background-color: #1e3a5f; color: #ffffff; padding: 0.75rem 1rem; }
+    header h1 { font-size: 1.25rem; font-weight: 600; max-width: 800px; margin: 0 auto; width: 100%; }
+    main {
+      max-width: 800px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 1.5rem; padding: 1.25rem 1rem; align-items: start;
+    }
+    #cotizador-form { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+    fieldset {
+      border: none; background-color: #ffffff; border-radius: 8px; padding: 1rem 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04); min-width: 0;
+    }
+    legend {
+      font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em;
+      color: #555; padding-bottom: 0.75rem; display: block; width: 100%;
+    }
+    label[for="sel-calzado"] { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.375rem; color: #333; }
+    #sel-calzado {
+      width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px;
+      background-color: #fff; font-size: 0.9375rem; color: #1a1a1a; cursor: pointer; transition: border-color 0.15s;
+    }
+    #sel-calzado:focus { outline: 2px solid #2563eb; outline-offset: 1px; border-color: #2563eb; }
+    .rep-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.35rem 0; }
+    .rep-item + .rep-item { border-top: 1px solid #f0f0f0; }
+    .rep-check { width: 1rem; height: 1rem; accent-color: #2563eb; cursor: pointer; flex-shrink: 0; }
+    .rep-item label { font-size: 0.9375rem; cursor: pointer; flex: 1; min-width: 0; }
+    #fs-urgencia label { display: flex; align-items: center; gap: 0.625rem; cursor: pointer; font-size: 0.9375rem; }
+    #chk-urgencia { width: 1rem; height: 1rem; accent-color: #d97706; flex-shrink: 0; }
+    #btn-cotizar {
+      align-self: flex-start; padding: 0.625rem 2rem; background-color: #2563eb; color: #ffffff;
+      font-size: 1rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer;
+      transition: background-color 0.15s, opacity 0.15s;
+    }
+    #btn-cotizar:hover:not(:disabled) { background-color: #1d4ed8; }
+    #btn-cotizar:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+    #btn-cotizar:disabled { opacity: 0.4; cursor: not-allowed; }
+    #mensaje-error {
+      background-color: #fef2f2; color: #b91c1c; border-left: 4px solid #ef4444;
+      border-radius: 4px; padding: 0.625rem 0.875rem; font-size: 0.9rem; font-weight: 500;
+    }
+    #desglose {
+      background-color: #ffffff; border-radius: 8px; padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      display: flex; flex-direction: column; gap: 0.875rem; min-width: 0;
+    }
+    #desglose h2 { font-size: 1rem; font-weight: 700; color: #1e3a5f; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+    #indicador-stale {
+      background-color: #fffbeb; color: #92400e; border: 1px solid #fcd34d;
+      border-radius: 4px; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500;
+    }
+    #desglose-lista { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+    #desglose-lista li {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 0.9375rem; padding: 0.3rem 0; border-bottom: 1px solid #f3f4f6; color: #374151;
+    }
+    #desglose p { font-size: 0.9375rem; color: #4b5563; display: flex; justify-content: space-between; }
+    #desglose p:last-child { border-top: 2px solid #e5e7eb; padding-top: 0.5rem; margin-top: 0.25rem; }
+    #desglose p:last-child strong { font-size: 1.1rem; color: #1e3a5f; }
+    @media (max-width: 640px) {
+      main { grid-template-columns: 1fr; padding: 1rem; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Cotizador de ReparaciÃ³n de Calzado</h1>
+  </header>
+
+  <main>
+    <form id="cotizador-form" novalidate>
+
+      <!-- SecciÃ³n 1: Tipo de calzado -->
+      <fieldset id="fs-calzado">
+        <legend>Tipo de calzado</legend>
+        <label for="sel-calzado">
+          Tipo de calzado <span aria-hidden="true">*</span>
+        </label>
+        <select id="sel-calzado" required>
+          <option value="" disabled selected>Selecciona un tipo</option>
+          <!-- Opciones generadas dinÃ¡micamente desde CONFIG.tipos_calzado -->
+        </select>
+      </fieldset>
+
+      <!-- SecciÃ³n 2: Tipos de reparaciÃ³n -->
+      <fieldset id="fs-reparaciones">
+        <legend>Tipos de reparaciÃ³n</legend>
+        <!-- Checkboxes generados dinÃ¡micamente desde CONFIG.reparaciones -->
+      </fieldset>
+
+      <!-- SecciÃ³n 3: Urgencia -->
+      <fieldset id="fs-urgencia">
+        <legend>Urgencia</legend>
+        <label for="chk-urgencia">
+          <input type="checkbox" id="chk-urgencia" />
+          Urgente (+20%) <!-- El porcentaje se interpola desde CONFIG.recargo_urgencia -->
+        </label>
+      </fieldset>
+
+      <!-- BotÃ³n de cotizar -->
+      <button type="button" id="btn-cotizar" disabled>Cotizar</button>
+
+      <!-- RegiÃ³n de mensajes de error (aria-live assertive para anuncio inmediato) -->
+      <div id="mensaje-error" role="alert" aria-live="assertive" hidden></div>
+
+    </form>
+
+    <!-- SecciÃ³n de desglose (aria-live polite, presente en DOM desde la carga inicial) -->
+    <section id="desglose" aria-live="polite" hidden>
+      <div id="indicador-stale" hidden>âš  Resultado desactualizado â€” vuelve a cotizar</div>
+      <h2>Desglose de cotizaciÃ³n</h2>
+      <ul id="desglose-lista"></ul>
+      <p>Subtotal: $<span id="desglose-subtotal"></span></p>
+      <p>Recargo urgencia: $<span id="desglose-recargo"></span></p>
+      <p><strong>Total: $<span id="desglose-total"></span></strong></p>
+    </section>
+  </main>
+
+  <script>
+    // =========================================================
+    // CONFIG â€” Ãšnica fuente de verdad para datos y constantes.
+    // Requirements: 1.1, 2.1, 3.1, 3.4
+    // =========================================================
+    const CONFIG = {
+      // Porcentaje de recargo por urgencia (entero 1â€“100). Req 3.1, 3.4
+      recargo_urgencia: 20,
+
+      // CatÃ¡logo de tipos de calzado (â‰¥4 entradas). Req 1.1
+      tipos_calzado: [
+        { id: 'zapato',   label: 'Zapato'   },
+        { id: 'bota',     label: 'Bota'     },
+        { id: 'sandalia', label: 'Sandalia' },
+        { id: 'tenis',    label: 'Tenis'    },
+      ],
+
+      // CatÃ¡logo de reparaciones (5â€“20 entradas con id, label y precio). Req 2.1
+      reparaciones: [
+        { id: 'suela',    label: 'Cambio de suela', precio: 250.00 },
+        { id: 'costura',  label: 'Costura',          precio: 120.00 },
+        { id: 'lustrado', label: 'Lustrado',         precio:  80.00 },
+        { id: 'pegado',   label: 'Pegado',           precio:  90.00 },
+        { id: 'tacon',    label: 'Cambio de tacÃ³n',  precio: 180.00 },
+      ],
+    };
+
+    // =========================================================
+    // calcEngine â€” LÃ³gica de dominio pura (sin acceso al DOM).
+    // Requirements: 2.2, 2.3, 3.2, 3.3, 5.1, 5.2, 5.3, 5.4
+    // =========================================================
+    const calcEngine = {
+      /**
+       * Suma los precios base de las reparaciones seleccionadas.
+       *
+       * @param {Array<{id: string, label: string, precio: number}>} reparaciones
+       * @param {Set<string>} seleccionados
+       * @returns {number} Subtotal (>= 0).
+       *
+       * Requirements: 2.2, 2.3, 5.1
+       */
+      calcularSubtotal(reparaciones, seleccionados) {
+        if (!seleccionados || seleccionados.size === 0) {
+          return 0;
+        }
+        return reparaciones
+          .filter(function(r) { return seleccionados.has(r.id); })
+          .reduce(function(acc, r) { return acc + r.precio; }, 0);
+      },
+
+      /**
+       * Calcula el total aplicando o no el recargo de urgencia.
+       *
+       * @param {number}  subtotal
+       * @param {boolean} urgente
+       * @param {number}  recargoPorc  Porcentaje entero de recargo (1 a 100).
+       * @returns {number}
+       *
+       * Requirements: 3.2, 3.3, 5.2, 5.3
+       */
+      calcularTotal(subtotal, urgente, recargoPorc) {
+        if (urgente) {
+          return subtotal * (1 + recargoPorc / 100);
+        }
+        return subtotal;
+      },
+
+      /**
+       * Formatea un nÃºmero como string con exactamente 2 decimales.
+       *
+       * @param {number} valor
+       * @returns {string} p. ej. "250.00"
+       *
+       * Requirements: 2.1, 5.4
+       */
+      formatearMoneda(valor) {
+        return Number(valor).toFixed(2);
+      },
+    };
+
+    // =========================================================
+    // AppState â€” Estado en memoria (no serializable, se pierde al recargar).
+    // Requirements: 9 (inicio limpio), 6.1
+    // =========================================================
+    const appState = {
+      desgloseMostrado: false,
+      desglosStale: false,
+    };
+
+    // =========================================================
+    // uiController â€” CoordinaciÃ³n de DOM y eventos.
+    // =========================================================
+    const uiController = {
+      /** Referencias cacheadas a los elementos del DOM. */
+      elements: {},
+
+      /**
+       * Inicializa la aplicaciÃ³n: verifica compatibilidad, valida configuraciÃ³n,
+       * genera contenido dinÃ¡mico y registra event listeners.
+       *
+       * Requirements: 1.1, 1.2, 2.1, 3.1, 3.4, 3.5, 7.5, 9.1â€“9.4
+       */
+      init() {
+        // --- 7.5 VerificaciÃ³n de compatibilidad de navegador ---
+        if (!document.querySelector || !document.addEventListener || !Array.from) {
+          document.body.innerHTML =
+            '<p style="color:red;padding:1rem;">' +
+            'Tu navegador no es compatible con esta aplicaciÃ³n. ' +
+            'Se recomienda actualizar a una versiÃ³n moderna.' +
+            '</p>';
+          return;
+        }
+
+        // --- Cachear referencias al DOM (elementos estÃ¡ticos) ---
+        const el = uiController.elements;
+        el.selectCalzado    = document.getElementById('sel-calzado');
+        el.checkboxUrgencia = document.getElementById('chk-urgencia');
+        el.btnCotizar       = document.getElementById('btn-cotizar');
+        el.seccionDesglose  = document.getElementById('desglose');
+        el.listaDesglose    = document.getElementById('desglose-lista');
+        el.spanSubtotal     = document.getElementById('desglose-subtotal');
+        el.spanRecargo      = document.getElementById('desglose-recargo');
+        el.spanTotal        = document.getElementById('desglose-total');
+        el.mensajeError     = document.getElementById('mensaje-error');
+        el.indicadorStale   = document.getElementById('indicador-stale');
+        const fsReparaciones = document.getElementById('fs-reparaciones');
+
+        // --- 3.5 Validar CONFIG.recargo_urgencia ---
+        const recargo = CONFIG.recargo_urgencia;
+        const recargoValido = (
+          typeof recargo === 'number' &&
+          Number.isInteger(recargo) &&
+          recargo >= 1 &&
+          recargo <= 100
+        );
+
+        if (!recargoValido) {
+          // Deshabilitar checkbox de urgencia y mostrar mensaje informativo inline
+          el.checkboxUrgencia.disabled = true;
+          const msgUrgencia = document.createElement('span');
+          msgUrgencia.id = 'msg-urgencia-invalido';
+          msgUrgencia.style.color = 'orange';
+          msgUrgencia.textContent =
+            ' (Recargo de urgencia no disponible: configuraciÃ³n invÃ¡lida)';
+          el.checkboxUrgencia.parentElement.appendChild(msgUrgencia);
+        }
+
+        // --- 1.1, 1.2 Generar opciones de tipos de calzado ---
+        CONFIG.tipos_calzado.forEach(function(tipo) {
+          const option = document.createElement('option');
+          option.value = tipo.id;
+          option.textContent = tipo.label;
+          el.selectCalzado.appendChild(option);
+        });
+
+        // --- 2.1 Generar checkboxes de reparaciones ---
+        CONFIG.reparaciones.forEach(function(rep) {
+          // Validar datos de la reparaciÃ³n antes de renderizar
+          if (typeof rep.precio !== 'number' || rep.precio < 0) {
+            console.warn('ReparaciÃ³n omitida por precio invÃ¡lido:', rep);
+            return;
+          }
+          const label = typeof rep.label === 'string' && rep.label.length > 80
+            ? rep.label.slice(0, 80)
+            : rep.label;
+          if (rep.label && rep.label.length > 80) {
+            console.warn('Etiqueta de reparaciÃ³n truncada a 80 caracteres:', rep.id);
+          }
+
+          const div = document.createElement('div');
+          div.className = 'rep-item';
+
+          const chk = document.createElement('input');
+          chk.type = 'checkbox';
+          chk.id = 'chk-' + rep.id;
+          chk.className = 'rep-check';
+          chk.value = rep.id;
+
+          const lbl = document.createElement('label');
+          lbl.htmlFor = 'chk-' + rep.id;
+          lbl.innerHTML =
+            label + ' â€” $<span>' + rep.precio.toFixed(2) + '</span>';
+
+          div.appendChild(chk);
+          div.appendChild(lbl);
+          fsReparaciones.appendChild(div);
+        });
+
+        // --- 3.1 Interpolar valor de recargo en la etiqueta de urgencia ---
+        // Re-query para obtener el label actualizado tras el DOM inicial
+        const lblUrgencia = el.checkboxUrgencia.parentElement;
+        // Reemplazar solo el texto del nodo de texto que contiene el porcentaje
+        Array.from(lblUrgencia.childNodes).forEach(function(node) {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('Urgente')) {
+            node.textContent = ' Urgente (+' + (recargoValido ? recargo : '?') + '%) ';
+          }
+        });
+
+        // --- Cachear la NodeList de checkboxes de reparaciones (DESPUÃ‰S de generarlos) ---
+        el.checkboxesRep = document.querySelectorAll('.rep-check');
+
+        // --- Registrar event listeners ---
+        el.checkboxesRep.forEach(function(chk) {
+          chk.addEventListener('change', function() {
+            uiController.syncButtonState();
+            uiController.markDesglosStale();
+          });
+        });
+
+        el.checkboxUrgencia.addEventListener('change', function() {
+          uiController.markDesglosStale();
+        });
+
+        el.btnCotizar.addEventListener('click', function() {
+          uiController.handleCotizar();
+        });
+
+        // Advertencia de consola si el catÃ¡logo de reparaciones estÃ¡ fuera de rango
+        const numRep = CONFIG.reparaciones.length;
+        if (numRep < 5 || numRep > 20) {
+          console.warn(
+            'CONFIG.reparaciones tiene ' + numRep + ' entradas; ' +
+            'se esperan entre 5 y 20.'
+          );
+        }
+      },
+
+      /**
+       * Lee los checkboxes activos y habilita/deshabilita el botÃ³n Cotizar.
+       *
+       * Requirements: 4.1, 4.2, 4.3
+       */
+      syncButtonState() {
+        const checkboxes = document.querySelectorAll('.rep-check');
+        const haySeleccionados = Array.from(checkboxes).some(function(chk) {
+          return chk.checked;
+        });
+        const btn = uiController.elements.btnCotizar ||
+          document.getElementById('btn-cotizar');
+
+        if (haySeleccionados) {
+          btn.removeAttribute('disabled');
+        } else {
+          btn.setAttribute('disabled', '');
+        }
+      },
+
+      /**
+       * Escribe el resultado en el DOM y revela la secciÃ³n de desglose.
+       *
+       * @param {{
+       *   items: Array<{reparacion: object, precioFormateado: string}>,
+       *   subtotalStr: string,
+       *   recargoStr: string,
+       *   totalStr: string
+       * }} desglose
+       *
+       * Requirements: 5.4, 5.6, 5.7, 6.2, 8.4, 8.5
+       */
+      renderDesglose(desglose) {
+        const el = uiController.elements;
+
+        // Limpiar la lista anterior
+        el.listaDesglose.innerHTML = '';
+
+        // AÃ±adir un <li> por cada Ã­tem del desglose
+        desglose.items.forEach(function(item) {
+          const li = document.createElement('li');
+          li.innerHTML =
+            item.reparacion.label +
+            ' â€” $<span>' + item.precioFormateado + '</span>';
+          el.listaDesglose.appendChild(li);
+        });
+
+        // Actualizar los spans de totales
+        el.spanSubtotal.textContent = desglose.subtotalStr;
+        el.spanRecargo.textContent  = desglose.recargoStr;
+        el.spanTotal.textContent    = desglose.totalStr;
+
+        // Mostrar la secciÃ³n de desglose
+        el.seccionDesglose.removeAttribute('hidden');
+
+        // Ocultar el indicador de desactualizado
+        el.indicadorStale.setAttribute('hidden', '');
+
+        // Actualizar estado de la aplicaciÃ³n
+        appState.desgloseMostrado = true;
+        appState.desglosStale = false;
+      },
+
+      /**
+       * Marca el desglose existente como desactualizado.
+       * Se llama cuando cambia cualquier input tras haber cotizado.
+       *
+       * Requirements: 6.1
+       */
+      markDesglosStale() {
+        if (appState.desgloseMostrado) {
+          uiController.elements.indicadorStale.removeAttribute('hidden');
+          appState.desglosStale = true;
+        }
+      },
+
+      /**
+       * Maneja el click en el botÃ³n Cotizar: valida, calcula y renderiza.
+       *
+       * Requirements: 1.4, 2.5, 5.2, 5.3, 5.5, 6.3
+       */
+      handleCotizar() {
+        const el = uiController.elements;
+
+        uiController.clearError();
+
+        // Validar que se haya seleccionado un tipo de calzado
+        if (!el.selectCalzado.value) {
+          uiController.showError('Debes seleccionar un tipo de calzado');
+          return;
+        }
+
+        // Obtener IDs de reparaciones seleccionadas
+        const checkboxes = document.querySelectorAll('.rep-check');
+        const seleccionadosSet = new Set(
+          Array.from(checkboxes)
+            .filter(function(chk) { return chk.checked; })
+            .map(function(chk) { return chk.value; })
+        );
+
+        // Validar que haya al menos una reparaciÃ³n seleccionada
+        if (seleccionadosSet.size === 0) {
+          uiController.showError('Debes seleccionar al menos una reparaciÃ³n');
+          return;
+        }
+
+        try {
+          // Calcular subtotal y total
+          const subtotal = calcEngine.calcularSubtotal(
+            CONFIG.reparaciones,
+            seleccionadosSet
+          );
+          const urgente = el.checkboxUrgencia.checked && !el.checkboxUrgencia.disabled;
+          const total = calcEngine.calcularTotal(
+            subtotal,
+            urgente,
+            CONFIG.recargo_urgencia
+          );
+          const recargo = total - subtotal;
+
+          // Construir objeto DesgloseCotizacion
+          const desglose = {
+            items: CONFIG.reparaciones
+              .filter(function(r) { return seleccionadosSet.has(r.id); })
+              .map(function(r) {
+                return {
+                  reparacion: r,
+                  precioFormateado: calcEngine.formatearMoneda(r.precio),
+                };
+              }),
+            subtotal: subtotal,
+            recargo: recargo,
+            total: total,
+            urgente: urgente,
+            subtotalStr: calcEngine.formatearMoneda(subtotal),
+            recargoStr:  calcEngine.formatearMoneda(recargo),
+            totalStr:    calcEngine.formatearMoneda(total),
+          };
+
+          uiController.renderDesglose(desglose);
+
+        } catch (error) {
+          console.error('Error al calcular la cotizaciÃ³n:', error);
+          // Conservar el desglose previo como stale (req 6.3)
+          uiController.markDesglosStale();
+          uiController.showError(
+            'No fue posible actualizar el resultado. Intenta de nuevo.'
+          );
+        }
+      },
+
+      /**
+       * Muestra un mensaje de error en la regiÃ³n de alertas.
+       *
+       * Requirements: 1.4, 5.5, 6.3
+       */
+      showError(msg) {
+        const el = uiController.elements.mensajeError ||
+          document.getElementById('mensaje-error');
+        el.textContent = msg;
+        el.removeAttribute('hidden');
+      },
+
+      /**
+       * Limpia el mensaje de error visible.
+       *
+       * Requirements: 1.4, 5.5, 6.3
+       */
+      clearError() {
+        const el = uiController.elements.mensajeError ||
+          document.getElementById('mensaje-error');
+        el.textContent = '';
+        el.setAttribute('hidden', '');
+      },
+    };
+
+    // =========================================================
+    // Arranque â€” ejecutar al finalizar la carga del DOM.
+    // =========================================================
+    uiController.init();
+  </script>
+
+</body>
+</html>
