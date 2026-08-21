@@ -1,0 +1,5 @@
+# Build output de Maven
+target/
+
+# Artefactos del sistema
+.DS_Store

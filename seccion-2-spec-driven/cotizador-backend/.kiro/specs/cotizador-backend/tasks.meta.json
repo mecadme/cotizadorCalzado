@@ -1,0 +1,741 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Crear `pom.xml` con dependencias base": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283110579
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283123676
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284209822
+      }
+    ],
+    "1.2 Crear la clase principal `CotizadorApplication.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283111198
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283126437
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284212966
+      }
+    ],
+    "2.1 Crear `Dinero.java` (value object)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283111353
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284216493
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284340762
+      }
+    ],
+    "2.2 Crear `NivelUrgencia.java` (enum)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283111426
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284217175
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284341416
+      }
+    ],
+    "3.1 Crear `Calzado.java` (entidad)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283111949
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284345062
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284714328
+      }
+    ],
+    "3.2 Crear `TipoReparacion.java` (entidad)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112227
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284345690
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284714803
+      }
+    ],
+    "3.3 Crear `SinReparacionesSeleccionadasException.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112296
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284346636
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284714113
+      }
+    ],
+    "3.4 Crear `Cotizacion.java` (agregado raíz con factory method)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112541
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284720294
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284850220
+      }
+    ],
+    "4.1 Crear `GenerarCotizacionCommand.java` (record)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112728
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284854805
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284913240
+      }
+    ],
+    "4.2 Crear `GenerarCotizacionUseCase.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112810
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284855333
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284912513
+      }
+    ],
+    "4.3 Crear `ConsultarCatalogoUseCase.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283112918
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284856174
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284911719
+      }
+    ],
+    "5.1 Crear `CalzadoRepositoryPort.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113213
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284916775
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284988540
+      }
+    ],
+    "5.2 Crear `ReparacionRepositoryPort.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113352
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284917475
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284989253
+      }
+    ],
+    "5.3 Crear `CotizacionRepositoryPort.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113461
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284918403
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284990003
+      }
+    ],
+    "6.1 Crear `UrgencyPricingStrategy.java` (interfaz)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113689
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284997132
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285023703
+      }
+    ],
+    "6.2 Crear `NormalPricingStrategy.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113760
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285027405
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285450826
+      }
+    ],
+    "6.3 Crear `RecargoUrgentePricingStrategy.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283113834
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285028051
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285451509
+      }
+    ],
+    "7.1 Crear `TipoErrorCotizacion.java` (enum)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114045
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285455749
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285599006
+      }
+    ],
+    "7.2 Crear `ViolacionCampo.java` (record)": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114141
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285603476
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285646586
+      }
+    ],
+    "7.3 Crear `ValidacionCotizacionException.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114280
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285649956
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285735374
+      }
+    ],
+    "8.1 Crear `ComparadorPorNombre.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114459
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285738731
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285928780
+      }
+    ],
+    "8.2 Crear `ConsultarCatalogoService.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114526
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285932535
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286103020
+      }
+    ],
+    "8.3 Crear `GenerarCotizacionService.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114599
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285933184
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286103456
+      }
+    ],
+    "9.1 Crear DTOs de catálogo: `CalzadoResponse.java` y `TipoReparacionResponse.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114686
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286107789
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286228289
+      }
+    ],
+    "9.2 Crear `CotizacionRequest.java` y `CotizacionResponse.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114755
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286108651
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286227506
+      }
+    ],
+    "10.1 Crear `CatalogoMapper.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283114942
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286232243
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286440110
+      }
+    ],
+    "10.2 Crear `CotizacionMapper.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115026
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286233003
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286439639
+      }
+    ],
+    "11.1 Crear `InMemoryCalzadoRepositoryAdapter.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115164
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286443913
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286490299
+      }
+    ],
+    "11.2 Crear `InMemoryReparacionRepositoryAdapter.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115256
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286444798
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286491109
+      }
+    ],
+    "11.3 Crear `InMemoryCotizacionRepositoryAdapter.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115388
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286445601
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286489514
+      }
+    ],
+    "12.1 Crear `CatalogoSemillaConfig.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115544
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286496521
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286573558
+      }
+    ],
+    "12.2 Crear `CorsConfig.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115738
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286494971
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286572783
+      }
+    ],
+    "12.3 Registrar el bean `Clock` en la configuración de la aplicación": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115802
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286495753
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286572126
+      }
+    ],
+    "12.4 Registrar el bean del mapa de estrategias de pricing": [
+      {
+        "executionId": "df8c0d95-3f00-40fd-9895-23a8414372f5",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787288155060
+      }
+    ],
+    "13.1 Crear `CatalogoController.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115891
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286578365
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286927216
+      }
+    ],
+    "13.2 Crear `CotizacionController.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283115984
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286577601
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286926552
+      }
+    ],
+    "14.1 Crear `ProblemDetailsExceptionHandler.java`": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283116033
+      },
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286931035
+      },
+      {
+        "executionId": "df8c0d95-3f00-40fd-9895-23a8414372f5",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787287743672
+      }
+    ],
+    "15. Checkpoint — verificación de la aplicación completa": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283116108
+      },
+      {
+        "executionId": "df8c0d95-3f00-40fd-9895-23a8414372f5",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787287880102
+      }
+    ],
+    "21. Checkpoint final — todos los tests pasan": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787283116193
+      }
+    ],
+    "1. Scaffolding del proyecto": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284213059
+      }
+    ],
+    "2. Capa domain — value objects y enum": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284341476
+      }
+    ],
+    "3. Capa domain — entidades": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284850528
+      }
+    ],
+    "4. Capa application — puertos de entrada": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284913297
+      }
+    ],
+    "5. Capa application — puertos de salida": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787284990099
+      }
+    ],
+    "6. Capa application — estrategias de pricing": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285451603
+      }
+    ],
+    "7. Capa application — excepciones de aplicación": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787285735504
+      }
+    ],
+    "8. Capa application — servicios": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286103543
+      }
+    ],
+    "9. Capa infrastructure — DTOs": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286228345
+      }
+    ],
+    "10. Capa infrastructure — mappers": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286440202
+      }
+    ],
+    "11. Capa infrastructure — adaptadores de persistencia in-memory": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286491179
+      }
+    ],
+    "12. Capa infrastructure — configuración": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286573626
+      }
+    ],
+    "13. Capa infrastructure — controladores REST": [
+      {
+        "executionId": "5ecf96a7-efa3-43f9-913f-519a59d1a3f2",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787286927300
+      }
+    ],
+    "14. Capa infrastructure — manejo de errores": [
+      {
+        "executionId": "df8c0d95-3f00-40fd-9895-23a8414372f5",
+        "chatSessionId": "sess_b6ab7240-628b-4b38-93c4-6c79341dfc99",
+        "timestamp": 1787287743673
+      }
+    ]
+  }
+}
