@@ -200,10 +200,11 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
     - S-05: `js/state.js` no referencia `document`, `window` ni `fetch`
     - _Requirements: 1.1, arquitectura_
 
-- [-] 11. Checkpoint final — Verificación completa
+- [x] 11. Checkpoint final — Verificación completa
   - Ejecutar `npx vitest --run` y confirmar que el 100% de las pruebas pasan. Verificar en navegador que la aplicación funciona con el backend corriendo en `http://localhost:8080`. Consultar al usuario si hay dudas antes de dar por terminada la implementación.
   - ✅ `npx vitest --run`: 68/68 pruebas pasan (10 archivos).
-  - ⏳ Pendiente: verificación manual en navegador — el backend en `http://localhost:8080` no estaba levantado durante la verificación automatizada.
+  - ✅ Integración contra el backend real en `http://localhost:8080`: catálogo (3 tipos de calzado + 4 reparaciones), regla UI-01, cotización 201 con y sin urgencia, reset inmediato al cambiar la selección, y error 400 mostrando el `detail` del ProblemDetails con la selección intacta.
+  - ✅ CORS verificado: preflight `OPTIONS /api/cotizaciones` responde 200 con `Access-Control-Allow-Origin: *`.
 
 ---
 
