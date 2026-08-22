@@ -1,6 +1,7 @@
 package com.tallerdae.cotizador.application.strategy;
 
 import com.tallerdae.cotizador.domain.model.Dinero;
+import com.tallerdae.cotizador.domain.strategy.UrgencyPricingStrategy;
 
 /**
  * Estrategia de pricing para pedidos normales (sin urgencia).

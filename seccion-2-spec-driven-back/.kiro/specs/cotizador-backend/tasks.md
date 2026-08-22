@@ -107,8 +107,8 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
   - [x] 5.2 Crear `ReparacionRepositoryPort.java` (interfaz)
     - Paquete `com.tallerdae.cotizador.application.port.out`
     - Métodos: `List<TipoReparacion> findAll()`, `Map<String, TipoReparacion> findAllById(Collection<String> ids)`
-    - **`findAllById` devuelve un índice `Map` (no `List`)** para que el servicio pueda: (a) reconstruir la lista con repeticiones y (b) detectar exactamente qué ids faltaron (Req 3.2, 5.4)
-    - _Requirements: 2.2, 3.2, 5.4, 5.5_
+    - **`findAllById` devuelve un índice `Map` (no `List`)** para que el servicio pueda: (a) reconstruir la lista con repeticiones y (b) detectar exactamente qué ids faltaron (Req 3.2, 5.5)
+    - _Requirements: 2.2, 3.2, 5.5, 5.6_
 
   - [x] 5.3 Crear `CotizacionRepositoryPort.java` (interfaz)
     - Paquete `com.tallerdae.cotizador.application.port.out`
@@ -118,7 +118,7 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
 
 - [x] 6. Capa application — estrategias de pricing
   - [x] 6.1 Crear `UrgencyPricingStrategy.java` (interfaz)
-    - Paquete `com.tallerdae.cotizador.application.strategy`
+    - Paquete `com.tallerdae.cotizador.domain.strategy` — la interfaz vive en el dominio porque `Cotizacion.crear(...)` la recibe como parámetro; ubicarla en `application` invertiría la regla de dependencias (decisión de diseño 4)
     - Métodos: `Dinero calcularRecargo(Dinero subtotal)`, `int calcularTiempo(int tiempoMaxDias)`
     - _Requirements: 3.4, 4.1, 4.3_
 
@@ -147,21 +147,21 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
       - `TIPO_CALZADO_NO_ENCONTRADO` → uri `https://api.cotizador/errors/tipo-calzado-no-encontrado`, title `Tipo de calzado no encontrado`
       - `TIPO_REPARACION_NO_ENCONTRADO` → uri `https://api.cotizador/errors/tipo-reparacion-no-encontrado`, title `Tipo de reparación no encontrado`
       - `SOLICITUD_MALFORMADA` → uri `https://api.cotizador/errors/solicitud-malformada`, title `Solicitud malformada`
-    - El orden de los valores define la precedencia para elegir el `type` cuando concurren varias causas (Req 5.7)
+    - El orden de los valores define la precedencia para elegir el `type` cuando concurren varias causas (Req 5.8)
     - Getters `getUri()` y `getTitle()`
-    - _Requirements: 5.2, 5.3, 5.4, 5.6, 5.7_
+    - _Requirements: 5.2, 5.3, 5.5, 5.7, 5.8_
 
   - [x] 7.2 Crear `ViolacionCampo.java` (record)
     - Paquete `com.tallerdae.cotizador.application.exception`
     - Campos: `tipo` (`TipoErrorCotizacion`), `campo` (`String`), `valoresInvalidos` (`List<String>`), `detalle` (`String`)
-    - _Requirements: 5.1–5.5_
+    - _Requirements: 5.1–5.6_
 
   - [x] 7.3 Crear `ValidacionCotizacionException.java`
     - Paquete `com.tallerdae.cotizador.application.exception`
     - Extiende `RuntimeException`
     - Campo `violaciones` (`List<ViolacionCampo>`, nunca vacía, en orden canónico)
     - Getter `violaciones()`
-    - _Requirements: 5.7_
+    - _Requirements: 5.8_
 
 - [x] 8. Capa application — servicios
   - [x] 8.1 Crear `ComparadorPorNombre.java`
@@ -184,7 +184,7 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
     - Paquete `com.tallerdae.cotizador.application.service`
     - Implementa `GenerarCotizacionUseCase`; anotada con `@Service`
     - Constructor inyecta: `CalzadoRepositoryPort`, `ReparacionRepositoryPort`, `CotizacionRepositoryPort`, `Map<NivelUrgencia, UrgencyPricingStrategy> estrategias`, `Clock clock`
-    - **Validación acumulativa** (Req 5.7) en el orden canónico — si hay violaciones lanza `ValidacionCotizacionException` sin ejecutar ningún cálculo:
+    - **Validación acumulativa** (Req 5.8) en el orden canónico — si hay violaciones lanza `ValidacionCotizacionException` sin ejecutar ningún cálculo:
       1. `tipoReparacionIds` nulo o vacío → `ViolacionCampo` de tipo `REPARACIONES_REQUERIDAS`
       2. `tipoCalzadoId` nulo, vacío o no encontrado → `ViolacionCampo` de tipo `TIPO_CALZADO_NO_ENCONTRADO`
       3. ids de reparaciones ausentes del índice → `ViolacionCampo` de tipo `TIPO_REPARACION_NO_ENCONTRADO` con ids faltantes deduplicados
@@ -193,7 +193,7 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
     - Delega a `Cotizacion.crear(...)`
     - Persiste con `CotizacionRepositoryPort.save`
     - **No se llama a `save` si la validación falla** (Req 3.9)
-    - _Requirements: 3.1–3.9, 4.1–4.4, 5.2–5.5, 5.7_
+    - _Requirements: 3.1–3.9, 4.1–4.4, 5.2–5.6, 5.8_
 
 - [x] 9. Capa infrastructure — DTOs
   - [x] 9.1 Crear DTOs de catálogo: `CalzadoResponse.java` y `TipoReparacionResponse.java`
@@ -205,7 +205,7 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
 
   - [x] 9.2 Crear `CotizacionRequest.java` y `CotizacionResponse.java`
     - Paquete `com.tallerdae.cotizador.infrastructure.adapter.in.rest.dto`
-    - `CotizacionRequest`: record con `tipoCalzadoId` (`String`), `tipoReparacionIds` (`List<String>`), `urgente` (`Boolean`) — **sin `@NotNull` ni Bean Validation** (Req 5.7, decisión de diseño 8)
+    - `CotizacionRequest`: record con `tipoCalzadoId` (`String`), `tipoReparacionIds` (`List<String>`), `urgente` (`Boolean`) — **sin `@NotNull` ni Bean Validation** (Req 5.8, decisión de diseño 8)
     - `CotizacionResponse`: record con `id` (`String`), `subtotal` (`BigDecimal`), `recargoUrgencia` (`BigDecimal`), `total` (`BigDecimal`), `moneda` (`String`), `tiempoEstimadoDias` (`int`), `fechaCreacion` (`String` en ISO 8601 UTC)
     - _Requirements: 3.5, 3.6, 3.7_
 
@@ -306,17 +306,18 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
       - Agrega extensión `errors` con una entrada `{field, valoresInvalidos}` por cada `ViolacionCampo`
       - `valoresInvalidos` se **omite** cuando la lista viene vacía (caso `reparaciones-requeridas`), en lugar de emitir `[]`: el Req 5.2 solo exige `field`
       - Usa `org.springframework.http.ProblemDetail` (soporte nativo RFC 7807 de Spring Framework 6)
-    - Handler para `HttpMessageNotReadableException` → `SOLICITUD_MALFORMADA`, 400 (Req 5.6)
-      - El Req 5.6 exige que `errors` **identifique los campos afectados**: extraer los nombres de campo de la ruta de Jackson (`JsonMappingException.getPath()`) cuando la causa la aporta, y omitir `errors` cuando el JSON está tan roto que no hay ruta (p. ej. `{"a":,,}`)
+    - Handler para `HttpMessageNotReadableException` → `SOLICITUD_MALFORMADA`, 400 (Req 5.7)
+      - El Req 5.7 exige que `errors` **identifique los campos afectados**: extraer los nombres de campo de la ruta de Jackson (`JsonMappingException.getPath()`) cuando la causa la aporta, y omitir `errors` cuando el JSON está tan roto que no hay ruta (p. ej. `{"a":,,}`)
     - Handler para `MethodArgumentTypeMismatchException` → `SOLICITUD_MALFORMADA`, 400
       - `errors`: una entrada con `field = ex.getName()` y `valoresInvalidos = [ex.getValue()]`
     - Handler para `SinReparacionesSeleccionadasException` → `REPARACIONES_REQUERIDAS`, 400
     - Todas las respuestas: `Content-Type: application/problem+json`; sin stack traces en el body
-    - _Requirements: 5.1, 5.2, 5.6, 5.7_
+    - _Requirements: 5.1, 5.2, 5.7, 5.8_
 
 - [x] 15. Checkpoint — verificación de la aplicación completa
   - Asegúrate de que `mvn compile` no produce errores
   - Verifica que no hay importaciones de Spring en `domain/` ni en `application/strategy/` ni en `application/exception/`
+    - Verifica además que `domain/` **no importa nada fuera de `domain/`**: `grep -rn "^import com.tallerdae" domain/ | grep -v "domain\."` debe salir vacío (regla de dependencias hexagonal)
   - Verifica que `CotizacionRequest` no tiene anotaciones de Bean Validation
   - Verifica que los literales `0.30` y `1.30` no aparecen **como código** en ninguna clase salvo `RecargoUrgentePricingStrategy.RECARGO_URGENCIA_PORCENTAJE` (las menciones en Javadoc no cuentan; buscar `new BigDecimal("0.30")`, no la cadena suelta)
   - Arranca la aplicación (`mvn spring-boot:run`) y comprueba que el contexto sube sin errores de wiring: es el único chequeo que detecta un `Map<NivelUrgencia, UrgencyPricingStrategy>` ausente o incompleto (tarea 12.4), porque `mvn compile` no lo ve
@@ -364,11 +365,11 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
     - Calzado no encontrado → 400 `tipo-calzado-no-encontrado`
     - Reparaciones no encontradas → 400 con lista de ids inválidos
     - Mezcla de ids válidos e inválidos → rechaza completo
-    - Varias causas simultáneas → único `ProblemDetails` con `errors` de dos entradas y `type` de mayor precedencia (Req 5.7)
+    - Varias causas simultáneas → único `ProblemDetails` con `errors` de dos entradas y `type` de mayor precedencia (Req 5.8)
     - Request válido urgente → cotización correcta
     - Request válido no urgente → cotización correcta
     - `save` NO se invoca cuando la validación falla (Req 3.9)
-    - _Requirements: 3.1–3.9, 5.2–5.5, 5.7_
+    - _Requirements: 3.1–3.9, 5.2–5.6, 5.8_
 
 - [ ] 18. Tests de unidad — infraestructura (opcionales)
   - [ ]* 18.1 Tests de `CotizacionController` (`@WebMvcTest`)
@@ -379,7 +380,7 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
 
   - [ ]* 18.2 Tests de `ProblemDetailsExceptionHandler`
     - Cada fila de la tabla de mapeo produce el `type`, `title`, `status` y `Content-Type: application/problem+json` correctos
-    - _Requirements: 5.1, 5.6_
+    - _Requirements: 5.1, 5.7_
 
   - [ ]* 18.3 Tests de `CatalogoSemillaConfig`
     - El catálogo semilla contiene exactamente 3 calzados y 4 reparaciones con sus valores del Req 7
@@ -460,12 +461,12 @@ Implementación del backend REST del cotizador de reparación de calzado usando 
   - [ ]* 19.14 `CotizacionIdsInvalidosPropertyTest` — Property 14: IDs inválidos reportados exhaustivamente
     - Para cualquier request con ids no registrados, `errors[].valoresInvalidos` contiene todos los ids inválidos, cada uno una sola vez, sin procesamiento parcial
     - **Property 14: Validación — identificadores desconocidos reportados exhaustivamente**
-    - **Validates: Requirements 5.4, 5.5**
+    - **Validates: Requirements 5.5, 5.6**
 
   - [ ]* 19.15 `ProblemDetailsShapePropertyTest` — Property 15: Shape de ProblemDetails en toda respuesta de error
     - Para cualquier request rechazado, la respuesta tiene `Content-Type: application/problem+json`, `status == 400`, `type`, `title` y `detail` no vacíos
     - **Property 15: Shape de ProblemDetails en toda respuesta de error**
-    - **Validates: Requirements 5.1, 5.6, 5.7**
+    - **Validates: Requirements 5.1, 5.7, 5.8**
 
   - [ ]* 19.16 `CotizacionPersistenciaPropertyTest` — Property 16: Toda cotización generada queda persistida
     - Para N requests válidos, `CotizacionRepositoryPort.save` recibe exactamente N invocaciones; ningún request rechazado produce invocación a `save`

@@ -2,7 +2,7 @@ package com.tallerdae.cotizador.infrastructure.config;
 
 import com.tallerdae.cotizador.application.strategy.NormalPricingStrategy;
 import com.tallerdae.cotizador.application.strategy.RecargoUrgentePricingStrategy;
-import com.tallerdae.cotizador.application.strategy.UrgencyPricingStrategy;
+import com.tallerdae.cotizador.domain.strategy.UrgencyPricingStrategy;
 import com.tallerdae.cotizador.domain.model.Calzado;
 import com.tallerdae.cotizador.domain.model.NivelUrgencia;
 import com.tallerdae.cotizador.domain.model.TipoReparacion;

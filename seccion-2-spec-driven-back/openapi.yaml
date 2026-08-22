@@ -302,7 +302,9 @@ components:
           minLength: 1
           description: |
             Id de un tipo de calzado existente. Si es `null`, vacío o no existe en el catálogo,
-            la respuesta es `400` con `type` `tipo-calzado-no-encontrado`.
+            la respuesta es `400` con `type` `tipo-calzado-no-encontrado`. Cuando el valor está
+            ausente, el `detail` pide el dato en lugar de reproducirlo, y `errors` no lleva
+            `valoresInvalidos`.
           example: "1"
         tipoReparacionIds:
           type: array
@@ -483,6 +485,16 @@ components:
                 errors:
                   - field: "tipoCalzadoId"
                     valoresInvalidos: ["99"]
+            tipoCalzadoAusente:
+              summary: '`tipoCalzadoId` ausente, nulo o vacío'
+              value:
+                type: "https://api.cotizador/errors/tipo-calzado-no-encontrado"
+                title: "Tipo de calzado no encontrado"
+                status: 400
+                detail: "Se requiere indicar el tipo de calzado"
+                instance: "/api/cotizaciones"
+                errors:
+                  - field: "tipoCalzadoId"
             tipoReparacionNoEncontrado:
               summary: Uno o más ids de reparación inexistentes
               value:

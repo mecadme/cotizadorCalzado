@@ -79,6 +79,7 @@ La arquitectura hexagonal organiza el código en tres capas concéntricas. Las d
 | `infrastructure` | `application.port.in`, `application.port.out`, `application.exception`, `application.strategy` (solo `config`, para instanciar el mapa de estrategias), `domain` |
 | `application.service` | `application.port.in`, `application.port.out`, `application.strategy`, `application.exception`, `domain` |
 | `application.strategy` | `domain` + Java estándar — **sin Spring** (ni `@Component`): las instancia `CatalogoSemillaConfig` |
+| `domain.strategy` | `domain.model` + Java estándar — es la interfaz que consume el agregado |
 | `application.exception` | Java estándar — sin Spring |
 | `domain` | Solo Java estándar — sin Spring, sin Jakarta, sin nada externo |
 
@@ -208,7 +209,7 @@ public interface ReparacionRepositoryPort {
 }
 ```
 
-> **Cambio deliberado respecto de un `findAllById` que devuelve `List`**: una lista de resultados pierde la multiplicidad de la petición (`["1","1"]` colapsaría a un solo elemento) y no permite saber qué ids faltaron. Devolver un índice `Map` deja al servicio reconstruir la lista con repeticiones y calcular exactamente el conjunto de ids no encontrados (Requirements 3.2, 5.4).
+> **Cambio deliberado respecto de un `findAllById` que devuelve `List`**: una lista de resultados pierde la multiplicidad de la petición (`["1","1"]` colapsaría a un solo elemento) y no permite saber qué ids faltaron. Devolver un índice `Map` deja al servicio reconstruir la lista con repeticiones y calcular exactamente el conjunto de ids no encontrados (Requirements 3.2, 5.5).
 
 #### `CotizacionRepositoryPort` (port.out)
 ```java
@@ -222,10 +223,11 @@ No expone operaciones de lectura: el almacenamiento exigido por el Requirement 3
 #### `GenerarCotizacionService` (service)
 Implementa `GenerarCotizacionUseCase`. Orquesta:
 
-1. **Validar acumulando todas las causas** (Requirement 5.7), en el orden canónico de los criterios:
+1. **Validar acumulando todas las causas** (Requirement 5.8), en el orden canónico de los criterios:
    - `tipoReparacionIds` nulo o vacío → violación `reparaciones-requeridas` (5.2).
-   - `tipoCalzadoId` nulo, vacío o no encontrado vía `CalzadoRepositoryPort.findById` → violación `tipo-calzado-no-encontrado` (5.3).
-   - ids de `tipoReparacionIds` ausentes del índice devuelto por `ReparacionRepositoryPort.findAllById` → violación `tipo-reparacion-no-encontrado`, con los ids faltantes **deduplicados para el reporte** (5.4, 5.5).
+   - `tipoCalzadoId` no encontrado vía `CalzadoRepositoryPort.findById` → violación `tipo-calzado-no-encontrado` con `valoresInvalidos` y un `detail` que nombra el id recibido (5.3).
+   - `tipoCalzadoId` nulo, vacío o en blanco → misma violación, pero **sin** `valoresInvalidos` y con el `detail` «Se requiere indicar el tipo de calzado»: no hay valor que reportar y el texto llega literal al usuario por UI-03, así que no debe concatenar `null` (5.4).
+   - ids de `tipoReparacionIds` ausentes del índice devuelto por `ReparacionRepositoryPort.findAllById` → violación `tipo-reparacion-no-encontrado`, con los ids faltantes **deduplicados para el reporte** (5.5, 5.6).
    - Si hay al menos una violación, lanza `ValidacionCotizacionException` con la lista completa. No se ejecuta ningún cálculo.
 2. **Resolver la lista de reparaciones preservando repeticiones**: para cada elemento de `command.tipoReparacionIds()` (en orden) se toma la entidad del índice, de modo que `["1","1"]` produzca dos elementos (Requirement 3.2).
 3. **Seleccionar la estrategia** a partir de `NivelUrgencia.desdeFlag(command.urgente())`.
@@ -256,7 +258,7 @@ public final class ComparadorPorNombre {
 
 > Se usa `java.text.Collator` en lugar de `String.compareTo` porque la comparación binaria de UTF-16 ordena mal los acentos (`"tacón"` quedaría después de `"tz"`), y el catálogo semilla contiene `"Cambio de tacón"`.
 
-#### `UrgencyPricingStrategy` (strategy — interface en application)
+#### `UrgencyPricingStrategy` (strategy — interfaz en `domain.strategy`)
 ```java
 public interface UrgencyPricingStrategy {
     Dinero calcularRecargo(Dinero subtotal);
@@ -316,7 +318,7 @@ public record CotizacionRequest(
 ) {}
 ```
 
-> **Sin anotaciones de Bean Validation.** Ver la decisión de diseño 8: la validación semántica vive en `GenerarCotizacionService` para poder acumular varias causas en un solo `ProblemDetails` (Requirement 5.7). `urgente` es `Boolean` (envoltorio) y **no** lleva `@NotNull`, porque ausente y `null` son valores válidos que significan `false`.
+> **Sin anotaciones de Bean Validation.** Ver la decisión de diseño 8: la validación semántica vive en `GenerarCotizacionService` para poder acumular varias causas en un solo `ProblemDetails` (Requirement 5.8). `urgente` es `Boolean` (envoltorio) y **no** lleva `@NotNull`, porque ausente y `null` son valores válidos que significan `false`.
 
 #### `CotizacionResponse` (DTO)
 ```java
@@ -458,6 +460,8 @@ src/main/java/com/tallerdae/cotizador/
 │   │   ├── Dinero.java
 │   │   ├── NivelUrgencia.java
 │   │   └── TipoReparacion.java
+│   ├── strategy/
+│   │   └── UrgencyPricingStrategy.java
 │   └── exception/
 │       └── SinReparacionesSeleccionadasException.java
 ├── application/
@@ -476,8 +480,7 @@ src/main/java/com/tallerdae/cotizador/
 │   │   └── GenerarCotizacionService.java
 │   ├── strategy/
 │   │   ├── NormalPricingStrategy.java
-│   │   ├── RecargoUrgentePricingStrategy.java
-│   │   └── UrgencyPricingStrategy.java
+│   │   └── RecargoUrgentePricingStrategy.java
 │   └── exception/
 │       ├── TipoErrorCotizacion.java
 │       ├── ValidacionCotizacionException.java
@@ -503,7 +506,21 @@ src/main/java/com/tallerdae/cotizador/
     └── config/
         ├── CatalogoSemillaConfig.java
         └── CorsConfig.java
+
+src/main/resources/
+└── application.properties
 ```
+
+### `application.properties`
+
+Fija explícitamente el comportamiento que, de otro modo, quedaría a merced de los defaults del framework:
+
+| Propiedad | Valor | Motivo |
+|---|---|---|
+| `spring.jackson.deserialization.fail-on-unknown-properties` | `false` | Requirement 5.9: las propiedades no declaradas se ignoran. Es el default de Spring Boot, pero fijarlo evita que un upgrade cambie el contrato sin que nadie lo note |
+| `spring.jackson.serialization.write-dates-as-timestamps` | `false` | Requirement 3.7: refuerza que las fechas nunca se serialicen como número |
+| `server.port` | `8080` | El contrato OpenAPI declara `http://localhost:8080` |
+| `server.error.include-stacktrace` / `include-message` | `never` | Regla de no exponer stack traces al cliente |
 
 ---
 
@@ -513,7 +530,7 @@ src/main/java/com/tallerdae/cotizador/
 
 **Problema**: La lógica de recargo y reducción de tiempo varía según el nivel de urgencia. Si se añaden nuevos niveles (p. ej., "express") la clase principal crecería con condicionales.
 
-**Solución**: `UrgencyPricingStrategy` es una interfaz en la capa `application.strategy` con dos métodos: `calcularRecargo(Dinero subtotal)` y `calcularTiempo(int tiempoMaxDias)`. Cada implementación encapsula un comportamiento:
+**Solución**: `UrgencyPricingStrategy` es una interfaz en `domain.strategy` con dos métodos: `calcularRecargo(Dinero subtotal)` y `calcularTiempo(int tiempoMaxDias)`. Cada implementación encapsula un comportamiento:
 
 | Clase | Comportamiento |
 |---|---|
@@ -524,7 +541,7 @@ src/main/java/com/tallerdae/cotizador/
 
 El mapa es un `@Bean` de `CatalogoSemillaConfig` que **instancia las estrategias con `new`**, no por descubrimiento de componentes: las implementaciones no llevan `@Component`, para que `application.strategy` siga sin depender de Spring (ver **Regla de dependencias**). Esa clase de configuración es el único punto donde el framework las conoce, y sin ese bean el contexto no arranca — un fallo que `mvn compile` no detecta.
 
-**Punto de aplicación exacto**: `application/strategy/` + `Cotizacion.crear(... UrgencyPricingStrategy strategy ...)`
+**Punto de aplicación exacto**: interfaz en `domain/strategy/`, implementaciones en `application/strategy/`, consumo en `Cotizacion.crear(... UrgencyPricingStrategy strategy ...)`
 
 ---
 
@@ -764,9 +781,9 @@ Las siguientes propiedades son adecuadas para property-based testing porque invo
 
 ### Property 13: Validación — calzado desconocido
 
-*Para cualquier* request cuyo `tipoCalzadoId` sea nulo, vacío o no esté registrado, el sistema debe responder HTTP 400 con `type == "https://api.cotizador/errors/tipo-calzado-no-encontrado"` y una entrada de `errors` con `field == "tipoCalzadoId"`, sin crear ninguna cotización.
+*Para cualquier* request cuyo `tipoCalzadoId` sea nulo, vacío o no esté registrado, el sistema debe responder HTTP 400 con `type == "https://api.cotizador/errors/tipo-calzado-no-encontrado"` y una entrada de `errors` con `field == "tipoCalzadoId"`, sin crear ninguna cotización. El `detail` nunca debe contener la cadena literal `null`.
 
-**Validates: Requirements 5.3**
+**Validates: Requirements 5.3, 5.4**
 
 ---
 
@@ -774,15 +791,15 @@ Las siguientes propiedades son adecuadas para property-based testing porque invo
 
 *Para cualquier* request que contenga uno o más `tipoReparacionIds` no registrados (en mezcla con válidos o todos inválidos), el sistema debe responder HTTP 400 y el `errors[].valoresInvalidos` correspondiente debe contener **todos** los identificadores inválidos recibidos, cada uno una sola vez, sin procesar parcialmente la solicitud.
 
-**Validates: Requirements 5.4, 5.5**
+**Validates: Requirements 5.5, 5.6**
 
 ---
 
 ### Property 15: Shape de ProblemDetails en toda respuesta de error
 
-*Para cualquier* request rechazado — por validación semántica o por cuerpo malformado — la respuesta debe tener `Content-Type: application/problem+json`, `status == 400` coincidente con el código HTTP, un `type` no vacío, un `title` no vacío, un `detail` no vacío y un `instance` igual a la ruta de la petición. Cuando hay más de una causa, `errors` contiene una entrada por campo afectado y el `type` corresponde a la causa de mayor precedencia según el Requirement 5.7.
+*Para cualquier* request rechazado — por validación semántica o por cuerpo malformado — la respuesta debe tener `Content-Type: application/problem+json`, `status == 400` coincidente con el código HTTP, un `type` no vacío, un `title` no vacío, un `detail` no vacío y un `instance` igual a la ruta de la petición. Cuando hay más de una causa, `errors` contiene una entrada por campo afectado y el `type` corresponde a la causa de mayor precedencia según el Requirement 5.8.
 
-**Validates: Requirements 5.1, 5.6, 5.7, 5.9**
+**Validates: Requirements 5.1, 5.7, 5.8, 5.10**
 
 ---
 
@@ -823,25 +840,25 @@ No existe `RepositorioNoDisponibleException`: se eliminó junto con el código 5
 | `TipoErrorCotizacion` | `type` | `title` | Requirement |
 |---|---|---|---|
 | `REPARACIONES_REQUERIDAS` | `https://api.cotizador/errors/reparaciones-requeridas` | Se requiere al menos una reparación | 5.2 |
-| `TIPO_CALZADO_NO_ENCONTRADO` | `https://api.cotizador/errors/tipo-calzado-no-encontrado` | Tipo de calzado no encontrado | 5.3 |
-| `TIPO_REPARACION_NO_ENCONTRADO` | `https://api.cotizador/errors/tipo-reparacion-no-encontrado` | Tipo de reparación no encontrado | 5.4, 5.5 |
-| `SOLICITUD_MALFORMADA` | `https://api.cotizador/errors/solicitud-malformada` | Solicitud malformada | 5.6 |
+| `TIPO_CALZADO_NO_ENCONTRADO` | `https://api.cotizador/errors/tipo-calzado-no-encontrado` | Tipo de calzado no encontrado | 5.3, 5.4 |
+| `TIPO_REPARACION_NO_ENCONTRADO` | `https://api.cotizador/errors/tipo-reparacion-no-encontrado` | Tipo de reparación no encontrado | 5.5, 5.6 |
+| `SOLICITUD_MALFORMADA` | `https://api.cotizador/errors/solicitud-malformada` | Solicitud malformada | 5.7 |
 
-El orden de esta tabla es también el **orden de precedencia** para elegir el `type` cuando concurren varias causas (Requirement 5.7).
+El orden de esta tabla es también el **orden de precedencia** para elegir el `type` cuando concurren varias causas (Requirement 5.8).
 
 ### Mapeo de excepciones a respuestas
 
 | Excepción capturada | Código | `type` resultante | Contenido de `errors` |
 |---|---|---|---|
 | `ValidacionCotizacionException` | 400 | El de la primera `ViolacionCampo` en orden canónico | Una entrada por violación |
-| `HttpMessageNotReadableException` (JSON inválido, tipo incorrecto en un campo) | 400 | `solicitud-malformada` | Los campos de `JsonMappingException.getPath()`; ausente si no hay ruta (Requirement 5.6) |
+| `HttpMessageNotReadableException` (JSON inválido, tipo incorrecto en un campo) | 400 | `solicitud-malformada` | Los campos de `JsonMappingException.getPath()`; ausente si no hay ruta (Requirement 5.7) |
 | `MethodArgumentTypeMismatchException` | 400 | `solicitud-malformada` | Una entrada con `field = ex.getName()` y `valoresInvalidos = [ex.getValue()]` |
 | `SinReparacionesSeleccionadasException` | 400 | `reparaciones-requeridas` | Una entrada con `field = "tipoReparacionIds"` |
 
 ### Flujo de manejo
 
-1. Jackson deserializa `CotizacionRequest`. Si el cuerpo no es JSON válido o un campo trae un tipo incompatible (p. ej. `"urgente": "quizá"`), lanza `HttpMessageNotReadableException` antes de llegar al servicio → `solicitud-malformada` (Requirement 5.6).
-2. `GenerarCotizacionService` valida la semántica **acumulando** todas las violaciones y lanza una única `ValidacionCotizacionException` (Requirements 5.2 a 5.5, 5.7).
+1. Jackson deserializa `CotizacionRequest`. Si el cuerpo no es JSON válido o un campo trae un tipo incompatible (p. ej. `"urgente": "quizá"`), lanza `HttpMessageNotReadableException` antes de llegar al servicio → `solicitud-malformada` (Requirement 5.7).
+2. `GenerarCotizacionService` valida la semántica **acumulando** todas las violaciones y lanza una única `ValidacionCotizacionException` (Requirements 5.2 a 5.6, 5.8).
 3. `SinReparacionesSeleccionadasException` solo puede surgir si se invoca el dominio directamente; el handler la mapea igual para no dejar un 500 posible.
 4. `ProblemDetailsExceptionHandler` construye el `org.springframework.http.ProblemDetail` (soporte nativo de RFC 7807 en Spring Framework 6), le fija `type`, `title`, `status` y `detail`, y agrega la propiedad de extensión `errors` con una entrada `{ field, valoresInvalidos }` por violación.
 
@@ -849,7 +866,7 @@ El orden de esta tabla es también el **orden de precedencia** para elegir el `t
    - `valoresInvalidos` se **omite** cuando la lista está vacía, en lugar de emitir `[]`: en `reparaciones-requeridas` no hay valores que reportar y el Requirement 5.2 solo exige `field`.
    - La propiedad `errors` completa se omite cuando no hay ningún campo que señalar — el único caso es un cuerpo tan malformado que Jackson no aporta ruta (p. ej. `{"a":,,}`).
 
-   Spring añade además `instance` con la ruta de la petición. Está declarado en el contrato OpenAPI y exigido por el Requirement 5.9, así que el handler no debe suprimirlo.
+   Spring añade además `instance` con la ruta de la petición. Está declarado en el contrato OpenAPI y exigido por el Requirement 5.10, así que el handler no debe suprimirlo.
 
 ```java
 @RestControllerAdvice
@@ -936,7 +953,7 @@ Estos tres casos son los escenarios Gherkin del Anexo C y la base del guion de v
 - Constructores de `Calzado` y `TipoReparacion`: rechazan `factorComplejidad < 0.5`, `precioBase < 0.01`, más de 2 decimales, y `tiempoEstimadoDias < 1`. Casos límite aceptados: `factorComplejidad == 0.5`, `precioBase == 0.01`, `tiempoEstimadoDias == 1`.
 
 **Aplicación (`application/`):**
-- `GenerarCotizacionService`: mocks de los tres puertos + `Clock.fixed`. Casos: calzado no encontrado; reparaciones no encontradas con lista de inválidos; mezcla de válidos e inválidos; **varias causas simultáneas → un solo ProblemDetails con `errors` de dos entradas y el `type` de mayor precedencia** (Requirement 5.7); request válido urgente; request válido no urgente; verificación de que `save` no se invoca en ningún caso rechazado.
+- `GenerarCotizacionService`: mocks de los tres puertos + `Clock.fixed`. Casos: calzado no encontrado; reparaciones no encontradas con lista de inválidos; mezcla de válidos e inválidos; **varias causas simultáneas → un solo ProblemDetails con `errors` de dos entradas y el `type` de mayor precedencia** (Requirement 5.8); request válido urgente; request válido no urgente; verificación de que `save` no se invoca en ningún caso rechazado.
 - `ConsultarCatalogoService`: catálogo vacío; catálogo con elementos desordenados → salida ordenada; orden correcto de `"Cambio de suela"` antes de `"Cambio de tacón"` y de `"Zapatilla deportiva"` antes de `"Zapato formal"`.
 - `ComparadorPorNombre`: insensibilidad a mayúsculas y a acentos.
 - `RecargoUrgentePricingStrategy` / `NormalPricingStrategy`: recargo y tiempo por separado.
@@ -944,7 +961,7 @@ Estos tres casos son los escenarios Gherkin del Anexo C y la base del guion de v
 **Infrastructure (`infrastructure/`):**
 - `CotizacionController` (`@WebMvcTest`): deserialización con `urgente` ausente; serialización de `CotizacionResponse`; código 201.
 - `ProblemDetailsExceptionHandler`: cada fila de la tabla de mapeo produce el `type`, `title`, `status`, `instance` y `Content-Type: application/problem+json` correctos.
-- `CotizacionController` con propiedades desconocidas en el cuerpo (p. ej. `{"tipoCalzadoId":"1","tipoReparacionIds":["1"],"colorFavorito":"azul"}`): se ignoran y la respuesta es 201, no 400 (Requirement 5.8). Depende de que `FAIL_ON_UNKNOWN_PROPERTIES` quede deshabilitado — es el default de Spring Boot, pero conviene fijarlo explícitamente para que no dependa de una versión.
+- `CotizacionController` con propiedades desconocidas en el cuerpo (p. ej. `{"tipoCalzadoId":"1","tipoReparacionIds":["1"],"colorFavorito":"azul"}`): se ignoran y la respuesta es 201, no 400 (Requirement 5.9). Depende de que `FAIL_ON_UNKNOWN_PROPERTIES` quede deshabilitado — es el default de Spring Boot, pero conviene fijarlo explícitamente para que no dependa de una versión.
 - `CatalogoSemillaConfig`: el catálogo semilla contiene exactamente los 3 calzados y 4 reparaciones del Requirement 7, con sus valores; un dato inválido aborta la construcción.
 - `InMemoryCotizacionRepositoryAdapter`: arranca vacío; `save` almacena y devuelve la instancia.
 - Los adaptadores de catálogo no exponen operaciones de escritura (verificable por reflexión o por revisión de la interfaz).
@@ -996,9 +1013,11 @@ Las Properties 1–7, 16 y 17 se testean directamente sobre clases de dominio/se
 **Decisión**: La fórmula `Σ(precioBase_i × factorComplejidad)` se ejecuta dentro del método de fábrica del agregado.
 **Razón**: Es lógica de negocio pura, sin dependencias externas. Colocarla en el servicio filtraría lógica de dominio hacia la capa de aplicación.
 
-### 4. `UrgencyPricingStrategy` en `application.strategy`, no en `domain`
-**Decisión**: La interfaz de estrategia vive en la capa de aplicación, aunque el dominio la usa a través del método de fábrica (pasada como parámetro).
-**Razón**: El porcentaje de recargo es un parámetro de negocio que puede cambiar. Mantenerlo fuera del dominio evita que un cambio de tarifa modifique el núcleo. El dominio recibe la estrategia y la delega, agnóstico a los valores concretos.
+### 4. La interfaz `UrgencyPricingStrategy` en `domain.strategy`; sus implementaciones en `application.strategy`
+**Decisión**: La **interfaz** vive en `domain/strategy/`. Las **implementaciones** que fijan valores de negocio concretos — `NormalPricingStrategy` y `RecargoUrgentePricingStrategy` con su 30 % — viven en `application/strategy/`.
+**Razón**: `Cotizacion.crear(...)` recibe la estrategia como parámetro, así que el dominio necesita conocer el tipo. Si la interfaz viviera en `application`, el dominio importaría hacia afuera y se invertiría la regla de dependencias hexagonal — que es exactamente lo que la rúbrica del taller evalúa.
+
+Una versión anterior de este diseño colocaba la interfaz completa en `application.strategy`, argumentando que el porcentaje de recargo es un parámetro de negocio que no debe vivir en el núcleo. Ese argumento es correcto pero no exige mover la **interfaz**: el valor concreto está en la implementación, no en el contrato. Separar ambos conserva la razón original — un cambio de tarifa toca solo `application/strategy/` — y elimina el import invertido. El dominio define *qué* se le puede pedir a una estrategia; la aplicación decide *cuánto* cobra.
 
 ### 5. `fechaCreacion` como `Instant` truncado a segundos en dominio y `String` en DTO
 **Decisión**: El dominio usa `java.time.Instant` truncado a segundos; el DTO usa `String` formateado con `DateTimeFormatter.ISO_INSTANT`.
@@ -1014,12 +1033,12 @@ Las Properties 1–7, 16 y 17 se testean directamente sobre clases de dominio/se
 
 ### 8. Validación semántica en el servicio, no con Bean Validation en el DTO
 **Decisión**: `CotizacionRequest` no lleva anotaciones `@NotNull` / `@NotEmpty`. Toda la validación de negocio ocurre en `GenerarCotizacionService`, que acumula violaciones y lanza una única `ValidacionCotizacionException`. Bean Validation queda fuera del flujo; solo los errores de deserialización de Jackson producen `solicitud-malformada`.
-**Razón**: El Requirement 5.7 exige agrupar en un solo `ProblemDetails` todas las causas de rechazo de una misma solicitud. Bean Validation se ejecuta **antes** de entrar al controlador y corta el flujo: si `tipoReparacionIds` viniera vacío y además `tipoCalzadoId` fuera desconocido, la respuesta solo mencionaría el primer problema, porque el servicio nunca se ejecutaría. Además, "que el id exista en el catálogo" no es una restricción estructural del DTO sino una regla de negocio: pertenece a la capa de aplicación.
+**Razón**: El Requirement 5.8 exige agrupar en un solo `ProblemDetails` todas las causas de rechazo de una misma solicitud. Bean Validation se ejecuta **antes** de entrar al controlador y corta el flujo: si `tipoReparacionIds` viniera vacío y además `tipoCalzadoId` fuera desconocido, la respuesta solo mencionaría el primer problema, porque el servicio nunca se ejecutaría. Además, "que el id exista en el catálogo" no es una restricción estructural del DTO sino una regla de negocio: pertenece a la capa de aplicación.
 **Consecuencia**: `urgente` se declara como `Boolean` sin `@NotNull`, coherente con que ausente y `null` signifiquen `false` (Requirement 3.3).
 
 ### 9. `findAllById` devuelve un índice `Map`, no una `List`
 **Decisión**: `ReparacionRepositoryPort.findAllById(Collection<String>)` devuelve `Map<String, TipoReparacion>`; el servicio reconstruye la lista recorriendo la petición original.
-**Razón**: Una `List` de resultados pierde dos informaciones necesarias: la multiplicidad de la petición (`["1","1"]` colapsaría a un elemento, incumpliendo el Requirement 3.2) y qué ids concretos faltaron (necesario para `errors[].valoresInvalidos` del Requirement 5.4). El índice preserva ambas sin que el puerto conozca las reglas de cobro.
+**Razón**: Una `List` de resultados pierde dos informaciones necesarias: la multiplicidad de la petición (`["1","1"]` colapsaría a un elemento, incumpliendo el Requirement 3.2) y qué ids concretos faltaron (necesario para `errors[].valoresInvalidos` del Requirement 5.5). El índice preserva ambas sin que el puerto conozca las reglas de cobro.
 
 ### 10. RFC 7807 como formato único de error
 **Decisión**: Todo error se devuelve como `ProblemDetail` de Spring con `Content-Type: application/problem+json`, un `type` URI estable por clase de error y la extensión `errors`.
