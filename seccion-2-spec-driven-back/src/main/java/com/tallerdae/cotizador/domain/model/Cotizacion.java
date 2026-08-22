@@ -1,6 +1,6 @@
 package com.tallerdae.cotizador.domain.model;
 
-import com.tallerdae.cotizador.application.strategy.UrgencyPricingStrategy;
+import com.tallerdae.cotizador.domain.strategy.UrgencyPricingStrategy;
 import com.tallerdae.cotizador.domain.exception.SinReparacionesSeleccionadasException;
 
 import java.math.BigDecimal;

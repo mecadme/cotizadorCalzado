@@ -1,0 +1,73 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  7. Resultados
+%
+%  Cierra el círculo con los objetivos (sección 2) y con los criterios de
+%  aceptación acordados. Los \label{ca:N} son los que hacen funcionar
+%  \crit{N} desde el resto del documento: si añades filas, añade su \label.
+% ===========================================================================
+
+\section{Resultados}
+\label{sec:resultados}
+
+\subsection{Funcionalidades implementadas}
+\label{sec:funcionalidades}
+
+\instruccion{Qué quedó operativo, con capturas de las pantallas principales.
+Dos o tres capturas bien elegidas valen más que ocho: las que muestran el
+flujo central del sistema. El resto va al anexo de capturas.}
+
+\ph{Resumen de lo implementado.}
+
+\subsection{Cumplimiento de los criterios de aceptación}
+\label{sec:cumplimiento}
+
+\instruccion{Un criterio por fila, con la evidencia que respalda cada «Sí».
+Es la tabla que un evaluador busca primero. Si alguno no se cumple,
+decláralo: un criterio marcado como cumplido que luego falla en la demo
+cuesta más que uno declarado pendiente.}
+
+\begin{table}[H]
+  \centering
+  \caption{Cumplimiento de los criterios de aceptación.}
+  \label{tab:cumplimiento}
+  \begin{tabularx}{\textwidth}{C{1.4cm} Y C{2cm} L{3cm}}
+    \toprule
+    \textbf{\#} & \textbf{Criterio} & \textbf{Estado} & \textbf{Evidencia} \\
+    \midrule
+    \textsf{CA-1}\label{ca:1} & \ph{Criterio acordado} & \ph{...} & \ph{...} \\
+    \textsf{CA-2}\label{ca:2} & \ph{Criterio acordado} & \ph{...} & \ph{...} \\
+    \textsf{CA-3}\label{ca:3} & \ph{Criterio acordado} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Verificación de las reglas de negocio}
+\label{sec:verificacion-reglas}
+
+\instruccion{Cómo se comprobó que cada regla de la \cref{tab:reglas}
+funciona. No hace falta un capítulo de pruebas: una tabla con el escenario,
+el resultado esperado y el obtenido es suficiente y se lee en treinta
+segundos. La colección de peticiones va al anexo.}
+
+\begin{table}[H]
+  \centering
+  \caption{Comprobación de las reglas de negocio.}
+  \label{tab:pruebas-reglas}
+  \begin{tabular}{C{1.6cm} L{6.6cm} L{4.8cm}}
+    \toprule
+    \textbf{Regla} & \textbf{Escenario} & \textbf{Resultado} \\
+    \midrule
+    \ph{...} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Limitaciones}
+\label{sec:limitaciones}
+
+\instruccion{Qué no se alcanzó y por qué. Declararlo suma: demuestra que se
+conoce el propio sistema. Omitir una limitación que el evaluador descubre en
+la demo resta el doble.}
+
+\ph{Limitaciones conocidas.}

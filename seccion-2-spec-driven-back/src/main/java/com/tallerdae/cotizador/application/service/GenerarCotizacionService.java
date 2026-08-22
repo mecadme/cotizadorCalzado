@@ -8,7 +8,7 @@ import com.tallerdae.cotizador.application.port.in.GenerarCotizacionUseCase;
 import com.tallerdae.cotizador.application.port.out.CalzadoRepositoryPort;
 import com.tallerdae.cotizador.application.port.out.CotizacionRepositoryPort;
 import com.tallerdae.cotizador.application.port.out.ReparacionRepositoryPort;
-import com.tallerdae.cotizador.application.strategy.UrgencyPricingStrategy;
+import com.tallerdae.cotizador.domain.strategy.UrgencyPricingStrategy;
 import com.tallerdae.cotizador.domain.model.Calzado;
 import com.tallerdae.cotizador.domain.model.Cotizacion;
 import com.tallerdae.cotizador.domain.model.NivelUrgencia;
@@ -79,11 +79,13 @@ public class GenerarCotizacionService implements GenerarCotizacionUseCase {
         Calzado calzado = null;
         String tipoCalzadoId = command.tipoCalzadoId();
         if (tipoCalzadoId == null || tipoCalzadoId.isBlank()) {
+            // Ausente o vacío: no hay valor que reportar, así que el mensaje pide el dato
+            // en lugar de concatenar "null" — este texto se muestra tal cual al usuario (UI-03).
             violaciones.add(new ViolacionCampo(
                     TipoErrorCotizacion.TIPO_CALZADO_NO_ENCONTRADO,
                     "tipoCalzadoId",
-                    tipoCalzadoId != null ? List.of(tipoCalzadoId) : List.of(),
-                    "Tipo de calzado no encontrado: " + tipoCalzadoId));
+                    List.of(),
+                    "Se requiere indicar el tipo de calzado"));
         } else {
             Optional<Calzado> calzadoOpt = calzadoRepository.findById(tipoCalzadoId);
             if (calzadoOpt.isEmpty()) {

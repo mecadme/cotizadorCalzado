@@ -1,0 +1,75 @@
+% !TeX root = ../informe.tex
+% ===========================================================================
+%  6. Reglas de negocio
+%
+%  Lo que se evalúa es la trazabilidad: cada regla, dónde se implementa y
+%  cómo se comprueba.
+%
+%  Los \label{rn:NN} de la tabla son los que hacen funcionar \rn{NN} desde
+%  el resto del documento: si añades filas, añade también su \label.
+% ===========================================================================
+
+\section{Reglas de negocio}
+\label{sec:reglas-negocio}
+
+\subsection{Catálogo de reglas}
+\label{sec:catalogo-reglas}
+
+\instruccion{Una fila por regla, con la columna de implementación rellenada
+de verdad: «\id{ms-pedidos}, \id{PedidoService}» dice algo; «se valida en el
+backend» no. Esta tabla es la que se mira para puntuar este criterio.}
+
+\begin{table}[H]
+  \centering
+  \caption{Reglas de negocio y dónde se implementa cada una.}
+  \label{tab:reglas}
+  \begin{tabular}{C{1.6cm} L{7.2cm} L{4.4cm}}
+    \toprule
+    \textbf{ID} & \textbf{Descripción} & \textbf{Implementación} \\
+    \midrule
+    \textbf{RN-01}\label{rn:01} & \ph{Enunciado de la regla} & \ph{...} \\
+    \textbf{RN-02}\label{rn:02} & \ph{Enunciado de la regla} & \ph{...} \\
+    \textbf{RN-03}\label{rn:03} & \ph{Enunciado de la regla} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Regla crítica}
+\label{sec:regla-critica}
+
+\instruccion{Elige la regla que más riesgo concentra — típicamente una que
+falla solo bajo concurrencia o con datos límite — y dedícale espacio: qué
+pasa si no se cumple, dónde se resuelve y por qué ahí. Renombra el apartado
+con el nombre de la regla.}
+
+\ph{Mecanismo elegido para \rn{01} y por qué resiste el caso adverso.}
+
+\subsection{Máquina de estados}
+\label{sec:estados}
+
+\instruccion{Si alguna entidad del sistema pasa por estados, este es su
+sitio. Un diagrama de estados pequeño comunica esto mejor que un párrafo; si
+no hay estados que modelar, borra el apartado en vez de dejarlo vacío.}
+
+\ph{Estados y transiciones permitidas.}
+
+\subsection{Traducción de reglas a respuestas de la API}
+\label{sec:errores}
+
+\instruccion{Qué código devuelve la API cuando se viola cada regla. Importa
+más de lo que parece: un 500 genérico ante una violación previsible es un
+defecto, y un código específico con un mensaje claro es lo que permite que la
+interfaz reaccione bien.}
+
+\begin{table}[H]
+  \centering
+  \caption{Correspondencia entre violación de regla y respuesta HTTP.}
+  \label{tab:errores}
+  \begin{tabular}{C{1.6cm} C{2.4cm} L{8.6cm}}
+    \toprule
+    \textbf{Regla} & \textbf{HTTP} & \textbf{Código de error y significado} \\
+    \midrule
+    \ph{...} & \ph{...} & \ph{...} \\
+    \bottomrule
+  \end{tabular}
+\end{table}

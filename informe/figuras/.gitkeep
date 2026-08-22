@@ -1,0 +1,13 @@
+# Las imágenes del informe van en esta carpeta.
+#
+# El preámbulo declara \graphicspath{{figuras/}}, así que basta con el nombre
+# del archivo:  \includegraphics[width=0.9\textwidth]{arquitectura.png}
+#
+# Formatos admitidos por pdflatex: PDF, PNG, JPG.
+# Para diagramas conviene PDF (o SVG exportado a PDF): no pierde nitidez al
+# ampliar ni al imprimir.
+#
+# Los diagramas de la sección de arquitectura se esperan con estos nombres:
+#   contexto.pdf · contenedores.pdf · componentes.pdf · despliegue.pdf
+#   modelo-datos.pdf
+# Mientras falten, el informe compila y deja un recuadro en su lugar.

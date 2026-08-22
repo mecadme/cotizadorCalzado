@@ -1,0 +1,178 @@
+% !TeX root = ../informe.tex
+%=======================================================================
+%  config/plantilla.tex — mecanismos propios de la plantilla
+%
+%  Dos interruptores gobiernan qué se ve. ANTES DE ENTREGAR pon los dos en
+%  «false»: desaparecen las cajas de instrucción y los marcadores quedan en
+%  negro, sin que haya que borrar nada del texto.
+%=======================================================================
+
+%------------------------ Interruptores --------------------------------
+\newif\ifguia          \guiatrue        % \guiafalse  oculta las instrucciones
+\newif\ifmarcadores    \marcadorestrue  % \marcadoresfalse deja los [Insertar ...] en negro
+
+%------------------------ Cajas de instrucción -------------------------
+\definecolor{guiaback}{HTML}{F3F4F6}
+\definecolor{guiaframe}{HTML}{9AA3AF}
+\definecolor{marcador}{HTML}{B45309}
+
+% \instruccion{...} — qué va en cada sitio. Se apagan con \guiafalse.
+\newcommand{\instruccion}[1]{%
+  \ifguia
+    \begin{tcolorbox}[enhanced,breakable,
+        colback=guiaback,colframe=guiaframe,boxrule=0.4pt,arc=1pt,
+        left=6pt,right=6pt,top=4pt,bottom=4pt,
+        fontupper=\small\itshape]
+      \textbf{\textup{Instrucción.}}\enspace #1
+    \end{tcolorbox}%
+  \fi}
+
+% \ph{...} — marcador de relleno, el equivalente de «[Insertar X]».
+% En ámbar mientras se escribe; en negro al entregar, para que salte a la
+% vista si alguno se quedó sin rellenar.
+\newcommand{\ph}[1]{%
+  \ifmarcadores{\color{marcador}\textsf{[#1]}}\else\textsf{[#1]}\fi}
+
+%--------------------------- Notas de pendiente ------------------------
+\setlength{\marginparwidth}{2.4cm}
+% Quita «disable» para volver a ver las notas de pendiente. Con la opción
+% puesta, no queda ninguna en el PDF aunque sigan escritas en el fuente.
+\usepackage[spanish,colorinlistoftodos,prependcaption,
+            textsize=footnotesize]{todonotes}
+
+% \pend{...}   nota al margen
+% \pendin{...} nota en línea, para textos largos o dentro de tablas
+% \falta{...}  pendiente que bloquea la entrega
+\newcommand{\pend}[1]{\todo[color=orange!35]{#1}}
+\newcommand{\pendin}[1]{\todo[inline,color=orange!25]{#1}}
+\newcommand{\falta}[1]{\todo[color=BrickRed!35]{#1}}
+
+%----------------------- Identificadores trazables ---------------------
+% Se usan en lugar de escribir el identificador a mano: crean hiperenlace
+% y mantienen honestas las referencias cruzadas entre secciones. Si el
+% destino no existe, LaTeX avisa y en el PDF sale «??» — que es justo lo
+% que se quiere: un identificador inventado no pasa desapercibido.
+%
+%   \rn{02}      RN-02   regla de negocio         (sección 6)
+%   \adrref{01}  ADR-01  decisión de arquitectura (sección 4)
+%   \vista{02}   V-02    vista arquitectónica     (sección 4)
+%   \crit{3}     CA-3    criterio de aceptación   (sección 7)
+%   \ent{1}      E1      entregable del proyecto
+%
+% Al declarar cada elemento hay que poner el \label correspondiente:
+%   \label{rn:02}  \label{adr:01}  \label{v:02}  \label{ca:3}
+\newcommand{\rn}[1]{\hyperref[rn:#1]{\textbf{RN-#1}}}
+\newcommand{\adrref}[1]{\hyperref[adr:#1]{\textsf{ADR-#1}}}
+\newcommand{\vista}[1]{\hyperref[v:#1]{\textsf{V-#1}}}
+\newcommand{\crit}[1]{\hyperref[ca:#1]{\textsf{CA-#1}}}
+\newcommand{\ent}[1]{\textbf{E#1}}
+
+% Identificador técnico en monoespaciado: \id{ms-pedidos}
+\newcommand{\id}[1]{\texttt{#1}}
+
+%------------------- Bloque de decisión de arquitectura ----------------
+% Un ADR compacto: los cuatro campos que hacen falta para que una decisión
+% se pueda discutir. Sin «alternativa descartada» un ADR no dice nada.
+%
+% Uso:
+%   \decision{01}{Título}{Contexto}{Decisión}{Alternativa descartada}{Consecuencia}
+\newcommand{\decision}[6]{%
+  \begin{tcolorbox}[enhanced,breakable,
+      colback=white,colframe=acento!45,boxrule=0.6pt,arc=2pt,
+      left=8pt,right=8pt,top=6pt,bottom=6pt,
+      title={\textsf{ADR-#1}\quad #2},
+      coltitle=white,colbacktitle=acento!85,fonttitle=\bfseries\small]
+    \label{adr:#1}%
+    \begin{description}[leftmargin=0pt,labelsep=6pt,itemsep=3pt]
+      \item[Contexto.] #3
+      \item[Decisión.] #4
+      \item[Alternativa descartada.] #5
+      \item[Consecuencia.] #6
+    \end{description}
+  \end{tcolorbox}}
+
+%----------------- Inclusión de diagramas con aviso --------------------
+% Si el archivo no existe todavía, el documento compila igual y deja un
+% recuadro visible en su lugar en vez de fallar. Así nadie entrega un PDF
+% al que le falta un diagrama sin enterarse.
+\newcommand{\ajustar}[1]{%
+  \adjustbox{max width=\linewidth,max height=0.68\textheight}{#1}}
+
+\newcommand{\faltafig}[1]{%
+  \fbox{\parbox{0.92\linewidth}{\centering\small
+    \textcolor{BrickRed}{\textbf{Falta \texttt{figuras/#1.pdf}}}\\[3pt]
+    Exporta el diagrama y déjalo en \texttt{figuras/} con ese nombre.}}}
+
+\newcommand{\diagrama}[1]{%
+  \IfFileExists{figuras/#1.pdf}%
+    {\ajustar{\includegraphics{#1}}}%
+    {\faltafig{#1}}}
+
+% Variante para diagramas anchos, pensada para ir dentro de un entorno
+% «sidewaysfigure»: en una página girada el ancho disponible pasa a ser
+% \textheight y el alto, \textwidth. Un diagrama de contenedores no cabe
+% legible en vertical; girarlo casi duplica la escala.
+\newcommand{\ajustarancho}[1]{%
+  \adjustbox{max width=\textheight,max height=0.92\textwidth}{#1}}
+
+\newcommand{\diagramaancho}[1]{%
+  \IfFileExists{figuras/#1.pdf}%
+    {\ajustarancho{\includegraphics{#1}}}%
+    {\faltafig{#1}}}
+
+% Variante «a página completa»: además de ocupar la página entera, invade
+% los márgenes. Sujeta al papel en vez de al bloque de texto, un diagrama
+% gana unos 20 puntos porcentuales de escala, que es la diferencia entre
+% leer los nombres de los contenedores y no leerlos.
+%
+% El \makebox declara el ancho que cabe pero recibe contenido mayor, así
+% que desborda por igual a ambos lados. Es deliberado: es la única forma de
+% salir del bloque de texto sin descolocar el centrado. OJO: ese ancho
+% declarado tiene que ser el del cuerpo del float donde se use, y no es el
+% mismo en vertical que en horizontal. Ponerlo mal es justo lo que hace que
+% la figura se vea corrida hacia un lado.
+%
+%   \diagramapagina{archivo}                -> vertical, dentro de «figure»
+%   \diagramapagina[horizontal]{archivo}    -> girado, dentro de «sidewaysfigure»
+%
+% Cuál conviene depende de la PROPORCIÓN del diagrama, no de su tamaño:
+% girar solo gana escala si el diagrama es más ancho que alto. Un diagrama
+% más alto que ancho no gana nada girado, así que la respuesta habitual es
+% «vertical».
+%
+% Al invadir los márgenes la figura pisaría el folio, así que esa página va
+% sin él con \thisfloatpagestyle{empty} (\thispagestyle no funciona dentro
+% de un float).
+
+% Margen contra el borde del papel: total de los dos lados (1 cm cada uno).
+\newcommand{\margenpapel}{2cm}
+
+% Hueco que hay que reservar para el pie de figura.
+\newcommand{\huecopie}{3\baselineskip}
+
+% VERTICAL — dentro de un «figure» normal. El cuerpo del float mide
+% \linewidth de ancho, y el espacio del papel es \paperwidth × \paperheight.
+\newcommand{\ajustarpaginavertical}[1]{%
+  \makebox[\linewidth]{%
+    \adjustbox{max width=\dimexpr\paperwidth-\margenpapel\relax,
+               max height=\dimexpr\paperheight-\margenpapel-\huecopie\relax}{#1}}}
+
+% HORIZONTAL — dentro de un «sidewaysfigure». Al girar, el cuerpo del float
+% mide \textheight de ancho y las dos dimensiones del papel se intercambian.
+\newcommand{\ajustarpaginahorizontal}[1]{%
+  \makebox[\textheight]{%
+    \adjustbox{max width=\dimexpr\paperheight-\margenpapel\relax,
+               max height=\dimexpr\paperwidth-\margenpapel-\huecopie\relax}{#1}}}
+
+% Primer argumento opcional: orientación, «vertical» (por defecto) u
+% «horizontal». Segundo: se pasa tal cual a \includegraphics, sirve sobre
+% todo para recortar el blanco sobrante: [trim=izq abajo der arriba,clip].
+\NewDocumentCommand{\diagramapagina}{O{vertical} O{} m}{%
+  \IfFileExists{figuras/#3.pdf}%
+    {\ifcsname ajustarpagina#1\endcsname
+       \csname ajustarpagina#1\endcsname{\includegraphics[#2]{#3}}%
+     \else
+       \PackageError{plantilla}{Orientacion '#1' desconocida en
+         \string\diagramapagina}{Usa 'vertical' u 'horizontal'.}%
+     \fi}%
+    {\faltafig{#3}}}
