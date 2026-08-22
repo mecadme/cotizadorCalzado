@@ -2,178 +2,218 @@
 
 ## Overview
 
-Implementar el Cotizador de Calzado como una sola página (`index.html`) usando HTML5 semántico, CSS3 y JavaScript ES6+ vanilla, siguiendo el patrón MVC ligero definido en el diseño: módulo `CONFIG` como fuente de verdad, `calcEngine` con lógica pura testeable y `uiController` como capa de presentación. Las pruebas se escriben con Vitest + fast-check sobre módulos ES extraídos del script embebido.
+Implementar el Cotizador de Calzado como una aplicación web de página única usando HTML5 semántico, CSS3 y JavaScript ES Modules vanilla, sin framework ni bundler. La arquitectura sigue tres módulos independientes: `api.js` (adaptador HTTP), `state.js` (estado en memoria con Observer), y `app.js` (coordinación DOM). Las pruebas se escriben con Vitest + jsdom + fast-check.
 
 ---
 
 ## Tasks
 
-- [x] 1. Configurar entorno de pruebas y estructura de archivos
-  - Crear `package.json` con dependencias de desarrollo: `vitest` y `fast-check`
-  - Crear `vitest.config.js` con entorno jsdom para pruebas de DOM
-  - Crear `src/calcEngine.js` como módulo ES exportable (misma lógica que irá embebida en `index.html`)
-  - Crear `tests/` con `calcEngine.test.js` y `ui.test.js` vacíos como placeholders
-  - _Requirements: 7.1 (un solo archivo final), estrategia de pruebas del diseño_
+- [ ] 1. Estructura base — `index.html` y `css/estilos.css`
+  - [-] 1.1 Crear `index.html` con esqueleto semántico completo
+    - Incluir `<div id="indicador-carga-catalogo" aria-live="polite" hidden>` para el estado UI-E1
+    - `<form id="cotizador-form" novalidate>` con tres fieldsets: `#fs-calzado`, `#fs-reparaciones`, `#fs-urgencia`
+    - `<select id="tipo-calzado-select" disabled required>` con opción placeholder `<option value="" disabled selected>Selecciona un tipo</option>`
+    - `<button type="button" id="btn-cotizar" disabled>Cotizar</button>` con texto visible
+    - `<div id="mensaje-error" role="alert" aria-live="assertive" hidden></div>`
+    - `<section id="resultado-cotizacion" aria-live="polite" hidden>` con spans: `#resultado-subtotal`, `#resultado-recargo`, `#resultado-total`, `#resultado-tiempo`
+    - `<label for="urgencia-checkbox">` asociado a `<input type="checkbox" id="urgencia-checkbox" disabled>`
+    - Cargar `js/app.js` con `<script type="module" src="js/app.js"></script>` al final del body
+    - Todos los controles inicialmente `disabled` para UI-E1
+    - _Requirements: 1.2, 1.3, 2.2, 4.1, 5.1, 5.5, 6.5, 9.1, 9.2, 9.3, 9.4, 10.1–10.5_
 
-- [x] 2. Implementar el módulo `CONFIG` y el esqueleto de `index.html`
-  - [x] 2.1 Crear `index.html` con estructura HTML semántica completa
-    - `<form id="cotizador-form" novalidate>` con los tres fieldsets: `#fs-calzado`, `#fs-reparaciones`, `#fs-urgencia`
-    - `<button id="btn-cotizar" disabled>` con texto visible "Cotizar"
-    - `<div id="mensaje-error" role="alert" aria-live="assertive" hidden>`
-    - `<section id="desglose" aria-live="polite" hidden>` con `#indicador-stale`, `#desglose-lista`, `#desglose-subtotal`, `#desglose-recargo`, `#desglose-total`
-    - Todos los controles asociados con `<label for="...">` correctos
-    - _Requirements: 1.1, 1.2, 2.1, 3.1, 4.1, 5.6, 7.1, 7.3, 8.1, 8.2, 8.3, 8.4, 9.1–9.4_
-  - [x] 2.2 Declarar `CONFIG` dentro del `<script>` de `index.html`
-    - Objeto literal con `recargo_urgencia: 20`, `tipos_calzado` (≥4 entradas), `reparaciones` (5 entradas con `id`, `label`, `precio`)
-    - _Requirements: 1.1, 2.1, 3.1, 3.4_
-  - [x]* 2.3 Escribir pruebas unitarias de estado inicial del DOM (U-01, U-02, U-03, U-05, U-09, U-10, U-11)
-    - Verificar: select tiene ≥4 opciones y placeholder `disabled`; todos los checkboxes desmarcados; botón `disabled`; sección desglose `hidden`; etiqueta urgencia muestra "20%"; opacidad/cursor del botón; `aria-live="polite"` presente desde carga; `for`/`id` correctos en controles
-    - _Requirements: 1.1, 1.2, 3.1, 4.4, 8.1, 8.3, 8.4, 9.1–9.4_
+  - [ ] 1.2 Crear `css/estilos.css` con estilos visuales
+    - Layout principal (flexbox o grid) para la pantalla única
+    - Estilos del fieldset de reparaciones para lista de checkboxes
+    - Estilos del `#btn-cotizar[disabled]`: `opacity: 0.4; cursor: not-allowed;`
+    - Estilos del `#resultado-cotizacion` (oculto/visible, destacado visual del total)
+    - Estilos del `#mensaje-error` (color de alerta, visible/oculto)
+    - Estilos del `#indicador-carga-catalogo` (visible durante UI-E1)
+    - _Requirements: 5.5, 6.3, 7.1_
 
-- [x] 3. Implementar `calcEngine` (lógica pura)
-  - [x] 3.1 Implementar `calcEngine.calcularSubtotal` en `src/calcEngine.js`
-    - Recibe `reparaciones[]` y `Set<string>` de IDs seleccionados; devuelve la suma de `precio` de los elementos cuyo `id` está en el Set
-    - Retorna `0` si el Set está vacío
-    - _Requirements: 2.2, 2.3, 5.1_
-  - [x]* 3.2 Escribir propiedad PBT-01 — Subtotal es la suma exacta
-    - **Property 1: Subtotal es la suma exacta de los precios seleccionados**
-    - **Validates: Requirements 2.2, 2.3, 2.4, 5.1**
-    - Generador: `fc.subarray(CONFIG.reparaciones, { minLength: 1 })`
-    - Invariante: `calcularSubtotal(reparaciones, new Set(sel.map(r => r.id))) === sel.reduce((a, r) => a + r.precio, 0)`
-  - [x] 3.3 Implementar `calcEngine.calcularTotal` en `src/calcEngine.js`
-    - Recibe `subtotal`, `urgente: boolean`, `recargoPorc: number`
-    - Si `urgente`: devuelve `subtotal * (1 + recargoPorc / 100)`; si no: devuelve `subtotal`
-    - _Requirements: 3.2, 3.3, 5.2, 5.3_
-  - [x]* 3.4 Escribir propiedad PBT-02 — Total con urgencia aplica el factor correctamente
-    - **Property 2: Total con urgencia aplica el factor correctamente**
-    - **Validates: Requirements 3.2, 5.2**
-    - Generadores: `fc.subarray(..., {minLength:1})`, `fc.integer({min:1, max:100})`
-    - Invariante: `Math.abs(calcularTotal(subtotal, true, recargo) - subtotal * (1 + recargo/100)) < 0.001`
-  - [x]* 3.5 Escribir propiedad PBT-03 — Total sin urgencia es igual al Subtotal
-    - **Property 3: Total sin urgencia es igual al Subtotal**
-    - **Validates: Requirements 3.3, 5.3**
-    - Generadores: `fc.subarray(..., {minLength:1})`, `fc.integer({min:1, max:100})`
-    - Invariante: `calcularTotal(subtotal, false, recargo) === subtotal`
-  - [x] 3.6 Implementar `calcEngine.formatearMoneda` en `src/calcEngine.js`
-    - Recibe `number`; devuelve string con exactamente 2 decimales (p. ej. `"250.00"`)
-    - _Requirements: 2.1, 5.4_
+- [ ] 2. Módulo `js/api.js` — adaptador HTTP
+  - [ ] 2.1 Implementar `api.js` con las tres funciones exportadas y la clase `ApiError`
+    - Declarar constante `API_BASE_URL = 'http://localhost:8080/api'`
+    - Implementar `export async function obtenerTiposCalzado()`: GET a `/api/tipos-calzado`, devuelve `TipoCalzado[]`, lanza `ApiError` si no es 2xx o hay error de red
+    - Implementar `export async function obtenerTiposReparacion()`: GET a `/api/tipos-reparacion`, devuelve `TipoReparacion[]`, lanza `ApiError` si no es 2xx o hay error de red
+    - Implementar `export async function generarCotizacion(request)`: POST a `/api/cotizaciones` con body JSON; traduce `request.esUrgente` → campo `urgente` al serializar el body (contrato OpenAPI); lanza `ApiError` con `statusCode=400` y `detail=ProblemDetails.detail` para 400, `statusCode=0` para error de red sin respuesta, `statusCode=5xx` para otros errores del servidor
+    - Clase `ApiError` con propiedades `statusCode`, `detail`, y opcionalmente `type`
+    - Estrategia de propagación: todo error se encapsula como `ApiError`; `app.js` no interpreta HTTP directamente
+    - _Requirements: 1.1, 6.1, 7.1, 7.3, 7.4_
 
-- [x] 4. Checkpoint — Pruebas de calcEngine
-  - Ejecutar `npx vitest --run tests/calcEngine.test.js` y asegurarse de que todas las pruebas pasan. Consultar al usuario si hay dudas antes de continuar.
-
-- [x] 5. Implementar `uiController` — inicialización y generación dinámica del DOM
-  - [x] 5.1 Implementar `uiController.init` dentro del `<script>` de `index.html`
-    - Cachear referencias a todos los elementos del DOM listados en el diseño
-    - Generar `<option>` para cada entrada de `CONFIG.tipos_calzado` en `#sel-calzado`
-    - Generar `<input type="checkbox" class="rep-check">` + `<label>` para cada entrada de `CONFIG.reparaciones`, mostrando `label` y `precio` con 2 decimales
-    - Interpolar el valor de `CONFIG.recargo_urgencia` en la etiqueta del checkbox de urgencia
-    - Registrar event listeners: `change` en cada `.rep-check` → `syncButtonState` + `markDesglosStale`; `change` en `#chk-urgencia` → `markDesglosStale`; `click` en `#btn-cotizar` → `handleCotizar`
-    - Validar `CONFIG.recargo_urgencia`; si inválido, deshabilitar `#chk-urgencia` y mostrar mensaje informativo
-    - Verificar APIs mínimas (`document.querySelector`, `addEventListener`, `Array.from`); mostrar banner de incompatibilidad si faltan
-    - _Requirements: 1.1, 1.2, 2.1, 3.1, 3.4, 3.5, 7.5, 9.1–9.4_
-  - [x] 5.2 Implementar `uiController.syncButtonState`
-    - Lee todos los `.rep-check` marcados; si hay ≥1, elimina `disabled` del botón; si no, lo añade
-    - _Requirements: 4.1, 4.2, 4.3_
-  - [x]* 5.3 Escribir propiedad PBT-04 — Estado del botón Cotizar
-    - **Property 4: botón habilitado ↔ hay al menos una reparación seleccionada**
-    - **Validates: Requirements 4.1, 4.2, 4.3**
-    - Generador: `fc.subarray(CONFIG.reparaciones, {minLength: 0})`
-    - Invariante: `btnCotizar.disabled === (seleccionados.length === 0)`
-  - [x]* 5.4 Escribir prueba unitaria U-06 — click en botón disabled no produce cambios
-    - Verificar que invocar `handleCotizar` con el botón disabled no produce efectos secundarios visibles ni cálculos
-    - _Requirements: 4.5_
-
-- [x] 6. Implementar `uiController` — renderizado del desglose
-  - [x] 6.1 Implementar `uiController.renderDesglose`
-    - Limpia `#desglose-lista` y añade un `<li>` por cada ítem del desglose con nombre y precio formateado
-    - Escribe en `#desglose-subtotal`, `#desglose-recargo`, `#desglose-total` usando `calcEngine.formatearMoneda`
-    - Muestra la sección `#desglose` (elimina `hidden`) y oculta `#indicador-stale`
-    - _Requirements: 5.4, 5.6, 5.7, 6.2, 8.4, 8.5_
-  - [x]* 6.2 Escribir propiedad PBT-05 — Formato del desglose
-    - **Property 5: desglose renderizado contiene todos los campos con formato correcto**
-    - **Validates: Requirements 5.4**
-    - Generadores: `fc.subarray(..., {minLength:1})`, `fc.boolean()`
-    - Invariante: cada reparación aparece en el DOM; todos los valores monetarios coinciden con `/\d+\.\d{2}/`; el total es igual al calculado por `calcEngine`
-  - [x]* 6.3 Escribir propiedad PBT-06 — Desglose refleja únicamente la selección más reciente
-    - **Property 6: desglose refleja únicamente la selección más reciente**
-    - **Validates: Requirements 5.7, 6.2**
-    - Generadores: dos `fc.subarray` distintos no vacíos
-    - Secuencia: cotizar con selección1 → cotizar con selección2 → verificar que solo aparecen ítems de selección2
-
-- [x] 7. Implementar `uiController` — manejo de errores y estado stale
-  - [x] 7.1 Implementar `uiController.handleCotizar`
-    - Verifica `#sel-calzado` no vacío → si falla, llama `showError` y retorna sin calcular
-    - Verifica que haya ≥1 checkbox activo → si falla, llama `showError` y retorna
-    - Llama `clearError`, luego `calcEngine.calcularSubtotal` y `calcEngine.calcularTotal`
-    - Construye objeto `DesgloseCotizacion` y llama `renderDesglose`
-    - Envuelve en try/catch: si `calcEngine` lanza, conserva el desglose previo como stale y llama `showError`
-    - _Requirements: 1.4, 2.5, 5.2, 5.3, 5.5, 6.3_
-  - [x] 7.2 Implementar `uiController.markDesglosStale`
-    - Si `desgloseMostrado === true`, muestra `#indicador-stale` (elimina `hidden`)
+  - [ ]* 2.2 Escribir pruebas unitarias U-06 y U-07 para la serialización de `generarCotizacion`
+    - U-06: verificar que `api.js` serializa `esUrgente: true` como `"urgente": true` en el body del POST
+    - U-07: verificar que `api.js` serializa `esUrgente: false` como `"urgente": false` en el body del POST
+    - Usar `vi.stubGlobal('fetch', ...)` o equivalente para interceptar el fetch sin red real
     - _Requirements: 6.1_
-  - [x] 7.3 Implementar `uiController.showError` y `uiController.clearError`
-    - `showError(msg)`: escribe texto en `#mensaje-error` y elimina `hidden`
-    - `clearError()`: limpia texto y añade `hidden`
-    - _Requirements: 1.4, 5.5, 6.3_
-  - [x]* 7.4 Escribir prueba unitaria U-07 — Cotizar sin Tipo_de_Calzado produce error
-    - _Requirements: 1.4_
-  - [x]* 7.5 Escribir prueba unitaria U-08 — Cotizar con selección válida muestra desglose
-    - _Requirements: 5.6, 5.7_
-  - [x]* 7.6 Escribir propiedad PBT-08 — Cotizar sin tipo de calzado siempre produce error
-    - **Property 8: cotizar sin tipo calzado produce error para cualquier selección**
-    - **Validates: Requirements 1.4**
-    - Generador: `fc.subarray(..., {minLength:1})` + `selectCalzado.value = ""`
-    - Invariante: `mensajeError.hidden === false` y desglose no cambia
-  - [x]* 7.7 Escribir prueba unitaria U-12 — Error de recálculo conserva desglose previo como stale
-    - Simular excepción en `calcEngine`; verificar que el desglose anterior persiste con `#indicador-stale` visible
-    - _Requirements: 6.3_
 
-- [x] 8. Implementar indicador de desactualizado y su ciclo de vida
-  - [x] 8.1 Conectar `markDesglosStale` a los listeners de cambio de checkboxes y urgencia (verificar que `init` los registra correctamente tras los pasos anteriores)
-    - _Requirements: 6.1, 6.2_
-  - [x]* 8.2 Escribir propiedad PBT-07 — Cambio tras cotizar activa indicador de desactualizado
-    - **Property 7: cambio tras cotizar activa indicador de desactualizado**
-    - **Validates: Requirements 6.1, 6.2**
-    - Generadores: subconjunto no vacío inicial + al menos un toggle de checkbox o urgencia
-    - Invariante: tras el cambio `indicadorStale.hidden === false`; tras recotizar `indicadorStale.hidden === true`
+- [ ] 3. Módulo `js/state.js` — estado en memoria con Observer
+  - [ ] 3.1 Implementar `state.js` con `getEstado()`, `setEstado(cambios)` y `onCambio(callback)`
+    - Estado inicial: `{ catalogoCalzado: [], catalogoReparaciones: [], tipoCalzadoId: '', reparacionesIds: new Set(), esUrgente: false, ultimaCotizacion: null, fase: 'idle' }`
+    - `export function getEstado()`: devuelve copia superficial del estado actual (no la referencia interna)
+    - `export function setEstado(cambios)`: aplica los cambios al estado interno y notifica a todos los callbacks registrados con `onCambio`
+    - `export function onCambio(callback)`: registra un callback invocado cada vez que el estado cambia; soporta múltiples suscriptores
+    - Sin referencias a `document`, `window`, ni `fetch` — el módulo es puro en términos de efectos secundarios de red/DOM
+    - _Requirements: estado interno — base para Req 1–10_
 
-- [x] 9. Checkpoint — Pruebas de uiController
-  - Ejecutar `npx vitest --run` y asegurarse de que todas las pruebas (unitarias y de propiedades) pasan. Consultar al usuario si hay dudas antes de continuar.
+  - [ ]* 3.2 Escribir pruebas unitarias de `state.js`
+    - Verificar estado inicial completo (todos los campos con sus valores por defecto)
+    - Verificar que `setEstado` notifica a todos los observadores registrados con `onCambio`
+    - Verificar que `getEstado` devuelve copia y no la referencia interna (mutarla no afecta el estado)
+    - _Requirements: 10.1–10.5_
 
-- [x] 10. Aplicar estilos CSS y restricciones visuales
-  - [x] 10.1 Escribir el bloque `<style>` en `index.html`
-    - Layout de una sola vista sin scroll vertical en 1024×768 px (grid o flexbox)
-    - Estilos para `#btn-cotizar[disabled]`: `opacity: 0.4`, `cursor: not-allowed`
-    - Estilos para `#indicador-stale` (visible/oculto)
-    - Estilos para `#mensaje-error` (color de alerta, visible/oculto)
-    - _Requirements: 4.4, 7.3_
-  - [x]* 10.2 Escribir prueba unitaria U-05 — Estilos del botón disabled
-    - Verificar `opacity ≤ 0.4` y `cursor: not-allowed` en el botón deshabilitado
-    - _Requirements: 4.4_
+- [ ] 4. Módulo `js/app.js` — carga del catálogo y renderizado inicial
+  - [ ] 4.1 Implementar `init()` y `cargarCatalogo()` en `app.js`
+    - `init()`: registrar el callback de `onCambio` con la función de renderizado, luego llamar `cargarCatalogo()`
+    - `cargarCatalogo()`: transicionar `fase` a `'loading-catalogo'`, mostrar `#indicador-carga-catalogo`, deshabilitar todos los controles; usar `Promise.all([obtenerTiposCalzado(), obtenerTiposReparacion()])` para las dos peticiones simultáneas; si ambos arrays tienen al menos un elemento, llamar `renderizarCalzado` y `renderizarReparaciones` y transicionar a `fase: 'idle'` habilitando controles; si alguno falla o devuelve array vacío, transicionar a `fase: 'error'` y mostrar mensaje en `#mensaje-error`
+    - Llamar `init()` al arrancar el módulo (nivel superior del script)
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [x] 11. Integrar `calcEngine` embebido en `index.html` y smoke tests
-  - [x] 11.1 Copiar/incrustar el contenido final de `src/calcEngine.js` dentro del `<script>` de `index.html` junto con `CONFIG` y `uiController`; llamar `uiController.init()` al final del script
-    - Verificar que `index.html` se abre con `file://` sin errores de consola
-    - _Requirements: 7.1, 7.2, 7.4_
-  - [x]* 11.2 Escribir smoke tests S-01, S-02, S-03, S-04
-    - S-01: `index.html` se carga sin errores de consola (JSDOM)
-    - S-02: `CONFIG.recargo_urgencia` está en rango [1, 100] con valor default 20
-    - S-03: sección desglose `hidden` al cargar
-    - S-04: no se realizan peticiones de red (verificar con mock de `fetch`/`XMLHttpRequest`)
-    - _Requirements: 7.2, 7.4, 3.4, 5.6_
+  - [ ] 4.2 Implementar `renderizarCalzado(estado)` en `app.js`
+    - Vaciar el select `#tipo-calzado-select` conservando solo la opción placeholder
+    - Añadir un `<option value="{id}">{nombre}</option>` por cada elemento de `estado.catalogoCalzado`
+    - Habilitar `#tipo-calzado-select` si la fase no es `'loading-catalogo'`
+    - _Requirements: 2.1, 2.2, 2.3_
 
-- [x] 12. Checkpoint final — Verificación completa
-  - Ejecutar `npx vitest --run` y confirmar que el 100 % de las pruebas pasan. Abrir `index.html` con protocolo `file://` y confirmar funcionamiento sin errores de consola. Consultar al usuario si hay dudas.
+  - [ ] 4.3 Implementar `renderizarReparaciones(estado)` en `app.js`
+    - Vaciar el fieldset `#fs-reparaciones`
+    - Por cada elemento de `estado.catalogoReparaciones`, crear `<label for="rep-{id}">` con `<input type="checkbox" id="rep-{id}" value="{id}" disabled>` + texto `{nombre} — $ {precioBase.toFixed(2)}`
+    - Registrar listener `change` en cada checkbox recién creado que actualice `reparacionesIds` en el estado
+    - _Requirements: 3.1, 3.2, 3.3, 3.4_
+
+- [ ] 5. Módulo `js/app.js` — habilitación del botón y reset inmediato
+  - [ ] 5.1 Implementar `sincronizarBoton(estado)` en `app.js`
+    - Evaluar la regla UI-01: `habilitado = estado.tipoCalzadoId !== '' && estado.reparacionesIds.size >= 1`
+    - Si `habilitado` y `fase` no bloquea (no es `'loading-catalogo'` ni `'cotizando'`): eliminar atributo `disabled` del botón; si no, añadir `disabled`
+    - Llamar `sincronizarBoton` dentro del callback de `onCambio` para evaluación reactiva
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 9.3_
+
+  - [ ] 5.2 Registrar listeners de `change` para reset inmediato del panel y del error
+    - `change` en `#tipo-calzado-select`: actualizar `tipoCalzadoId` en estado; si `fase === 'resultado'` u `fase === 'error'`, llamar `ocultarResultado()` y `limpiarError()` inmediatamente (mismo ciclo de evento)
+    - `change` en cualquier checkbox de `#fs-reparaciones`: actualizar `reparacionesIds` en estado (añadir o eliminar según `checked`); si `fase === 'resultado'` u `fase === 'error'`, llamar `ocultarResultado()` y `limpiarError()` inmediatamente
+    - `change` en `#urgencia-checkbox`: actualizar `esUrgente` en estado; si `fase === 'resultado'` u `fase === 'error'`, llamar `ocultarResultado()` y `limpiarError()` inmediatamente
+    - _Requirements: 7.5, 8.1, 8.2, 8.3_
+
+- [ ] 6. Módulo `js/app.js` — cotización, renderizado del resultado y errores
+  - [ ] 6.1 Implementar `handleCotizar()` en `app.js`
+    - Obtener el estado actual con `getEstado()`
+    - Llamar `construirRequestCotizacion(estado)` para obtener el body del POST
+    - Transicionar `fase` a `'cotizando'` y deshabilitar `#btn-cotizar`
+    - Llamar `generarCotizacion(request)` de `api.js`
+    - Si 201: guardar `ultimaCotizacion` en estado, transicionar `fase` a `'resultado'`, llamar `renderizarResultado(cotizacion)`; si `renderizarResultado` lanza, capturar y transicionar a `fase: 'error'` con mensaje genérico
+    - Si `ApiError` con `statusCode === 400`: transicionar `fase` a `'error'`, mostrar `error.detail` en `#mensaje-error`; preservar `tipoCalzadoId`, `reparacionesIds` y `esUrgente` intactos
+    - Si `ApiError` con `statusCode === 0` (red): transicionar a `fase: 'error'`, mostrar mensaje genérico "No fue posible completar la solicitud"
+    - Si `ApiError` con `statusCode >= 500`: transicionar a `fase: 'error'`, mostrar mensaje genérico de error de servidor sin detalles técnicos
+    - Registrar listener `click` en `#btn-cotizar` → `handleCotizar` en `init()`
+    - _Requirements: 6.1, 6.2, 6.3, 7.1, 7.2, 7.3, 7.4_
+
+  - [ ] 6.2 Implementar `construirRequestCotizacion(estado)` en `app.js`
+    - Función pura (sin efectos secundarios): recibe `AppState`, devuelve `{ tipoCalzadoId, tipoReparacionIds: Array.from(estado.reparacionesIds), esUrgente: estado.esUrgente }`
+    - Exportar la función para que sea testeable directamente
+    - _Requirements: 6.1_
+
+  - [ ] 6.3 Implementar `renderizarResultado(cotizacion)`, `mostrarError(mensaje)`, `limpiarError()` y `ocultarResultado()` en `app.js`
+    - `renderizarResultado(cotizacion)`: escribir en `#resultado-subtotal` el valor `cotizacion.moneda + ' ' + cotizacion.subtotal.toFixed(2)`, en `#resultado-recargo` el `recargoUrgencia.toFixed(2)` con moneda, en `#resultado-total` el `total.toFixed(2)` con moneda, en `#resultado-tiempo` el `String(cotizacion.tiempoEstimadoDias)`; siempre mutar el contenido del DOM (incluso si el valor es idéntico al anterior) para forzar el anuncio `aria-live`; mostrar `#resultado-cotizacion` (eliminar `hidden`)
+    - `mostrarError(mensaje)`: escribir `mensaje` en `#mensaje-error` y eliminar `hidden`
+    - `limpiarError()`: vaciar `#mensaje-error` y añadir `hidden`
+    - `ocultarResultado()`: añadir `hidden` a `#resultado-cotizacion`
+    - _Requirements: 6.3, 6.4, 6.5, 9.4, 9.5_
+
+- [ ] 7. Checkpoint — Módulos completos
+  - Ejecutar `npx vitest --run` y asegurarse de que todas las pruebas existentes pasan. Verificar manualmente en navegador que el catálogo carga y los controles se habilitan. Consultar al usuario si hay dudas antes de continuar.
+
+- [ ] 8. Pruebas unitarias (Vitest + jsdom)
+  - [ ] 8.1 Crear `package.json`, `vitest.config.js` y configurar el entorno de pruebas
+    - `package.json` con `"type": "module"` y dependencias de desarrollo: `vitest`, `fast-check`, `jsdom`
+    - `vitest.config.js` con `environment: 'jsdom'` para las pruebas de DOM
+    - _Requirements: estrategia de pruebas del diseño_
+
+  - [ ]* 8.2 Escribir pruebas unitarias U-01 a U-05 — estado inicial del DOM
+    - U-01: `#tipo-calzado-select` tiene `disabled` y opción placeholder presente con `value=""`
+    - U-02: todos los checkboxes de reparación desmarcados, `#btn-cotizar` disabled, `#resultado-cotizacion` hidden al cargar
+    - U-03: después de cargar el catálogo, el select contiene exactamente N+1 opciones (N ítems + placeholder)
+    - U-04: cada checkbox de reparación muestra `nombre` y `precioBase.toFixed(2)` con símbolo de moneda
+    - U-05: error de red al cargar catálogo: `#mensaje-error` visible, selector y checkboxes siguen deshabilitados
+    - _Requirements: 1.2, 1.3, 1.5, 2.1, 2.2, 3.1, 10.1–10.5_
+
+  - [ ]* 8.3 Escribir pruebas unitarias U-08 a U-11 — accesibilidad estática
+    - U-08: `#btn-cotizar` tiene `textContent` no vacío (no depende solo de ícono)
+    - U-09: cada control de formulario tiene `<label>` vinculado con `for`/`id` correspondiente
+    - U-10: `#resultado-cotizacion` tiene `aria-live="polite"` presente en el DOM desde la carga inicial
+    - U-11: `#mensaje-error` tiene `role="alert"` y `aria-live="assertive"` en el HTML inicial
+    - _Requirements: 9.1, 9.2, 9.4_
+
+  - [ ]* 8.4 Escribir pruebas unitarias U-12 a U-15 — manejo de errores y panel de resultado
+    - U-12: error 400 — la selección de calzado, reparaciones y urgencia no cambia tras recibir el error
+    - U-13: error de red — el botón se rehabilita si la selección sigue siendo válida (fase vuelve a `'error'`, no bloquea botón)
+    - U-14: backend responde 5xx — `#mensaje-error` muestra mensaje genérico sin detalles técnicos
+    - U-15: `#resultado-cotizacion` hidden en estado inicial y en UI-E2 (antes de la primera cotización exitosa)
+    - _Requirements: 6.5, 7.2, 7.3, 7.4_
+
+- [ ] 9. Pruebas de propiedades (fast-check, mínimo 100 iteraciones cada una)
+  - [ ]* 9.1 Escribir PBT-01 — Carga del catálogo concurrente
+    - **Property 1: cargarCatalogo() hace exactamente 2 GETs simultáneos; controles habilitados solo si ambos arrays son no vacíos**
+    - **Validates: Requirements 1.1, 1.4**
+    - Generadores: `fc.array(tipoCalzadoArbitrary, { minLength: 0, maxLength: 10 })` y `fc.array(tipoReparacionArbitrary, { minLength: 0, maxLength: 10 })`
+    - Invariantes: `fetch` llamado exactamente 2 veces; si ambos arrays tienen `length > 0` → controles habilitados (`fase !== 'error'`); si alguno es `[]` → controles deshabilitados (`fase === 'error'`)
+
+  - [ ]* 9.2 Escribir PBT-02 — Habilitación del botón Cotizar
+    - **Property 2: btn.disabled === !(tipoCalzadoId !== '' && reparacionesIds.size >= 1)**
+    - **Validates: Requirements 5.2, 5.3, 5.4, 9.3**
+    - Generadores: `fc.oneof(fc.constant(''), fc.string({ minLength: 1, maxLength: 20 }))` para `tipoCalzadoId`; `fc.array(fc.string({ minLength: 1 }), { maxLength: 5 })` para IDs de reparaciones
+    - Invariante: `setEstado({ tipoCalzadoId, reparacionesIds: new Set(ids) }); sincronizarBoton(getEstado()); expect(btn.disabled).toBe(!(tipoCalzadoId !== '' && ids.length > 0))`
+
+  - [ ]* 9.3 Escribir PBT-03 — Request bien formado
+    - **Property 3: construirRequestCotizacion(estado) produce siempre un objeto con los campos requeridos correctos**
+    - **Validates: Requirements 6.1, 3.2, 3.3, 4.2, 4.3**
+    - Generadores: `fc.string({ minLength: 1, maxLength: 20 })` para `tipoCalzadoId`; `fc.array(fc.string({ minLength: 1 }), { minLength: 1, maxLength: 5 })` para reparaciones; `fc.boolean()` para `esUrgente`
+    - Invariantes: `req.tipoCalzadoId` es string no vacío idéntico al del estado; `req.tipoReparacionIds` es array con exactamente los IDs del Set (mínimo 1); `req.esUrgente` es boolean idéntico al del estado
+
+  - [ ]* 9.4 Escribir PBT-04 — Visualización fiel de la respuesta del backend
+    - **Property 4: renderizarResultado() muestra exactamente los valores recibidos del backend sin transformaciones aritméticas**
+    - **Validates: Requirements 6.3, 6.4, 9.5**
+    - Generadores: `fc.float({ min: 0.01, max: 9999.99, noNaN: true })` para `subtotal`, `recargoUrgencia`, `total`; `fc.integer({ min: 1, max: 365 })` para `tiempoEstimadoDias`; `fc.constant('USD')` para `moneda`
+    - Invariantes: `#resultado-subtotal` contiene `subtotal.toFixed(2)`; `#resultado-recargo` contiene `recargoUrgencia.toFixed(2)`; `#resultado-total` contiene `total.toFixed(2)`; `#resultado-tiempo` contiene `String(tiempoEstimadoDias)`; `#resultado-cotizacion` no está `hidden`; la función muta el DOM en cada llamada (incluso con valores idénticos)
+
+  - [ ]* 9.5 Escribir PBT-05 — Mensaje de error es el `detail` del ProblemDetails, selección intacta
+    - **Property 5: error 400 muestra el campo detail del ProblemDetails y preserva la selección del usuario**
+    - **Validates: Requirements 7.1, 7.2, 7.3**
+    - Generadores: `fc.string({ minLength: 1, maxLength: 200 })` para `detail`; `fc.string({ minLength: 1 })` para `tipoCalzadoId`; `fc.array(fc.string({ minLength: 1 }), { minLength: 1 })` para reparaciones; `fc.boolean()` para `esUrgente`
+    - Invariantes: `#mensaje-error.textContent === detail`; `#mensaje-error` no está `hidden`; `getEstado().tipoCalzadoId === tipoCalzadoId`; `getEstado().reparacionesIds` contiene exactamente los mismos IDs; `getEstado().esUrgente === esUrgente`
+
+  - [ ]* 9.6 Escribir PBT-06 — Reset inmediato del panel y del error al modificar la selección
+    - **Property 6: cualquier evento change en un control mientras fase==='resultado'|'error' oculta el panel y el error en el mismo ciclo de evento**
+    - **Validates: Requirements 7.5, 8.1, 8.2, 8.3**
+    - Generadores: `fc.constantFrom('resultado', 'error')` para `fase`; `fc.oneof(fc.record({ tipo: fc.constant('calzado'), valor: fc.string({ minLength: 1 }) }), fc.record({ tipo: fc.constant('reparacion'), id: fc.string({ minLength: 1 }), checked: fc.boolean() }), fc.record({ tipo: fc.constant('urgencia'), checked: fc.boolean() }))` para el tipo de cambio
+    - Invariantes: tras disparar el evento `change`, `#resultado-cotizacion.hidden === true` y `#mensaje-error.hidden === true`
+
+  - [ ]* 9.7 Escribir PBT-07 — Prevención de envíos duplicados en UI-E3
+    - **Property 7: cuando fase==='cotizando', btn.disabled===true y clicks adicionales no generan POSTs**
+    - **Validates: Requirements 5.6, 6.2**
+    - Invariantes: `setEstado({ fase: 'cotizando' }); sincronizarBoton(getEstado()); expect(btn.disabled).toBe(true)`; simular clicks en `#btn-cotizar`; verificar que `fetch` no es llamado con `POST /api/cotizaciones`
+
+- [ ] 10. Smoke tests
+  - [ ]* 10.1 Escribir smoke tests S-01 a S-05
+    - S-01: `index.html` se carga en jsdom sin errores de consola JS
+    - S-02: al arrancar, la aplicación realiza exactamente 2 peticiones GET (una a cada endpoint del catálogo)
+    - S-03: `js/state.js` no importa módulos propios del proyecto (ni `api.js` ni `app.js`)
+    - S-04: `js/api.js` no importa módulos propios del proyecto y no referencia `document` ni `window`
+    - S-05: `js/state.js` no referencia `document`, `window` ni `fetch`
+    - _Requirements: 1.1, arquitectura_
+
+- [ ] 11. Checkpoint final — Verificación completa
+  - Ejecutar `npx vitest --run` y confirmar que el 100% de las pruebas pasan. Verificar en navegador que la aplicación funciona con el backend corriendo en `http://localhost:8080`. Consultar al usuario si hay dudas antes de dar por terminada la implementación.
 
 ---
 
 ## Notes
 
-- Las sub-tareas marcadas con `*` son opcionales y pueden omitirse para un MVP más rápido, pero cubren las 8 propiedades de corrección del diseño y las pruebas unitarias de referencia.
-- `src/calcEngine.js` es un artefacto de desarrollo temporal; el artefacto final entregable es únicamente `index.html`.
-- Cada propiedad PBT se etiqueta en el código con `// Feature: cotizador-ui, Property N: ...` y ejecuta mínimo 100 iteraciones.
-- Las pruebas de DOM usan JSDOM vía Vitest (`environment: 'jsdom'` en la configuración).
-- Los checkpoints garantizan validación incremental antes de avanzar a la siguiente capa.
+- Las sub-tareas marcadas con `*` son opcionales y pueden omitirse para un MVP más rápido, pero cubren las 7 propiedades de corrección del diseño y las pruebas unitarias de referencia.
+- Cada propiedad PBT se etiqueta en el código con `// Feature: cotizador-ui, Property N: ...` y ejecuta mínimo 100 iteraciones (`numRuns: 100`).
+- Las pruebas de DOM usan jsdom vía Vitest (`environment: 'jsdom'` en la configuración).
+- `api.js` es el único módulo que conoce `http://localhost:8080/api`; `state.js` y `api.js` son completamente independientes entre sí.
+- `construirRequestCotizacion` en `app.js` es una función pura exportada, directamente testeable.
+- La serialización `esUrgente → urgente` ocurre dentro de `generarCotizacion()` en `api.js`, no en `construirRequestCotizacion`.
+- Checkpoints en tarea 7 y tarea 11 garantizan validación incremental.
 
 ---
 
@@ -182,15 +222,14 @@ Implementar el Cotizador de Calzado como una sola página (`index.html`) usando 
 ```json
 {
   "waves": [
-    { "id": 0, "tasks": ["2.1", "2.2"] },
-    { "id": 1, "tasks": ["3.1", "3.3", "3.6", "2.3"] },
-    { "id": 2, "tasks": ["3.2", "3.4", "3.5", "5.1"] },
-    { "id": 3, "tasks": ["5.2", "5.3", "5.4", "6.1"] },
-    { "id": 4, "tasks": ["6.2", "6.3", "7.1", "7.2", "7.3"] },
-    { "id": 5, "tasks": ["7.4", "7.5", "7.6", "7.7", "8.1"] },
-    { "id": 6, "tasks": ["8.2", "10.1"] },
-    { "id": 7, "tasks": ["10.2", "11.1"] },
-    { "id": 8, "tasks": ["11.2"] }
+    { "id": 0, "tasks": ["1.1", "1.2"] },
+    { "id": 1, "tasks": ["2.1", "3.1", "8.1"] },
+    { "id": 2, "tasks": ["2.2", "3.2", "4.1"] },
+    { "id": 3, "tasks": ["4.2", "4.3"] },
+    { "id": 4, "tasks": ["5.1", "5.2"] },
+    { "id": 5, "tasks": ["6.1", "6.2", "6.3"] },
+    { "id": 6, "tasks": ["8.2", "8.3", "8.4", "9.1", "9.2", "9.3"] },
+    { "id": 7, "tasks": ["9.4", "9.5", "9.6", "9.7", "10.1"] }
   ]
 }
 ```

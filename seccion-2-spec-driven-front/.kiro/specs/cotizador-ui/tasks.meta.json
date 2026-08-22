@@ -555,6 +555,13 @@
         "chatSessionId": "sess_1ce2ac2c-5432-45c5-bc44-8103bf7efeb0",
         "timestamp": 1787285268940
       }
+    ],
+    "1.1 Crear `index.html` con esqueleto semántico completo": [
+      {
+        "executionId": "4232524e-f107-4802-8b1d-a05da3396875",
+        "chatSessionId": "sess_72262a55-63bf-4cf4-882c-b0a6dc4e8749",
+        "timestamp": 1787362454606
+      }
     ]
   }
 }
