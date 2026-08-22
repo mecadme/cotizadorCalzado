@@ -7,12 +7,14 @@
  * Dependencias: ./api.js, ./state.js
  */
 
-import { obtenerTiposCalzado, obtenerTiposReparacion } from './api.js';
+import { obtenerTiposCalzado, obtenerTiposReparacion, generarCotizacion, ApiError } from './api.js';
 import { getEstado, setEstado, onCambio } from './state.js';
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
 const MSG_ERROR_CATALOGO = 'No fue posible cargar el catálogo. Por favor, recarga la página.';
+const MSG_ERROR_RED      = 'No fue posible completar la solicitud';
+const MSG_ERROR_SERVIDOR = 'Ocurrió un problema al procesar la cotización. Inténtalo de nuevo más tarde.';
 
 // ── Arranque ──────────────────────────────────────────────────────────────────
 
@@ -22,15 +24,12 @@ const MSG_ERROR_CATALOGO = 'No fue posible cargar el catálogo. Por favor, recar
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5
  */
 async function init() {
-  // Registrar el observer único: despacha a la función de render correcta según la fase
+  // Registrar el observer único: reevalúa la habilitación del botón en cada cambio (Req 5.x)
   onCambio(function renderDispatch(estado) {
-    // Tareas 5 y 6 extenderán este bloque con sincronizarBoton, renderizarResultado, etc.
-    // Por ahora solo reacciona a cambios de catálogo y fase de carga.
-    if (estado.fase === 'idle' || estado.fase === 'error') {
-      // Render de catálogo ya fue invocado directamente en cargarCatalogo();
-      // este callback queda listo para que las tareas siguientes lo extiendan.
-    }
+    sincronizarBoton(estado);
   });
+
+  registrarListeners();
 
   await cargarCatalogo();
 }
@@ -43,7 +42,7 @@ async function init() {
  * Si algún endpoint falla o devuelve array vacío → transiciona a UI-E5 (fase 'error').
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5
  */
-async function cargarCatalogo() {
+export async function cargarCatalogo() {
   // Transicionar a UI-E1: deshabilitar controles y mostrar indicador de carga
   setEstado({ fase: 'loading-catalogo' });
   _deshabilitarTodosLosControles();
@@ -95,7 +94,7 @@ async function cargarCatalogo() {
  * Requirements: 2.1, 2.2, 2.3
  * @param {AppState} estado
  */
-function renderizarCalzado(estado) {
+export function renderizarCalzado(estado) {
   const select = document.getElementById('tipo-calzado-select');
 
   // Eliminar opciones previas conservando solo el placeholder (primer hijo)
@@ -125,7 +124,7 @@ function renderizarCalzado(estado) {
  * Requirements: 3.1, 3.2, 3.3, 3.4
  * @param {AppState} estado
  */
-function renderizarReparaciones(estado) {
+export function renderizarReparaciones(estado) {
   const fieldset = document.getElementById('fs-reparaciones');
 
   // Vaciar el fieldset (eliminar checkboxes previos, conservar la leyenda)
@@ -155,6 +154,7 @@ function renderizarReparaciones(estado) {
     // Req 3.2, 3.3: listener que mantiene reparacionesIds sincronizado con el estado
     checkbox.addEventListener('change', function () {
       const estadoActual = getEstado();
+      const mostrabaSalida = _muestraSalida(estadoActual.fase);
       const nuevosIds = new Set(estadoActual.reparacionesIds);
       if (checkbox.checked) {
         nuevosIds.add(rep.id);
@@ -162,10 +162,190 @@ function renderizarReparaciones(estado) {
         nuevosIds.delete(rep.id);
       }
       setEstado({ reparacionesIds: nuevosIds });
+
+      // Req 8.2: cambiar la selección invalida el resultado/error mostrado
+      if (mostrabaSalida) {
+        _resetSalida();
+      }
     });
 
     fieldset.appendChild(label);
   }
+}
+
+// ── Habilitación del botón (Tarea 5.1) ───────────────────────────────────────
+
+/**
+ * Aplica la regla UI-01 sobre `#btn-cotizar`.
+ * habilitado = tipoCalzadoId !== '' && reparacionesIds.size >= 1
+ * Las fases bloqueantes ('loading-catalogo', 'cotizando') fuerzan `disabled`
+ * incluso con una selección válida (Req 5.6 — prevención de envíos duplicados).
+ * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 9.3
+ * @param {AppState} estado
+ */
+export function sincronizarBoton(estado) {
+  const btn = document.getElementById('btn-cotizar');
+  if (!btn) return;
+
+  const seleccionValida = estado.tipoCalzadoId !== '' && estado.reparacionesIds.size >= 1;
+  const faseBloquea     = estado.fase === 'loading-catalogo' || estado.fase === 'cotizando';
+
+  if (seleccionValida && !faseBloquea) {
+    btn.removeAttribute('disabled');
+  } else {
+    btn.setAttribute('disabled', '');
+  }
+}
+
+// ── Listeners de la selección (Tarea 5.2) ────────────────────────────────────
+
+/**
+ * ¿La fase actual muestra salida (resultado o error) que debe invalidarse
+ * ante cualquier cambio de la selección?
+ * @param {Fase} fase
+ * @returns {boolean}
+ */
+function _muestraSalida(fase) {
+  return fase === 'resultado' || fase === 'error';
+}
+
+/**
+ * Oculta el panel de resultado y limpia el error en el mismo ciclo de evento,
+ * devolviendo la aplicación a la fase 'idle'.
+ * Requirements: 7.5, 8.1, 8.2, 8.3
+ */
+function _resetSalida() {
+  ocultarResultado();
+  limpiarError();
+  setEstado({ fase: 'idle' });
+}
+
+/**
+ * Registra los listeners de los controles estáticos del formulario.
+ * Los checkboxes de reparación se enlazan en `renderizarReparaciones()`
+ * porque se crean dinámicamente.
+ * Requirements: 4.2, 4.3, 6.1, 7.5, 8.1, 8.2, 8.3
+ */
+function registrarListeners() {
+  const select   = document.getElementById('tipo-calzado-select');
+  const urgencia = document.getElementById('urgencia-checkbox');
+  const btn      = document.getElementById('btn-cotizar');
+
+  select.addEventListener('change', function () {
+    const mostrabaSalida = _muestraSalida(getEstado().fase);
+    setEstado({ tipoCalzadoId: select.value });
+    if (mostrabaSalida) {
+      _resetSalida();
+    }
+  });
+
+  urgencia.addEventListener('change', function () {
+    const mostrabaSalida = _muestraSalida(getEstado().fase);
+    setEstado({ esUrgente: urgencia.checked });
+    if (mostrabaSalida) {
+      _resetSalida();
+    }
+  });
+
+  btn.addEventListener('click', handleCotizar);
+}
+
+// ── Cotización (Tarea 6) ─────────────────────────────────────────────────────
+
+/**
+ * Construye el body del POST /api/cotizaciones a partir del estado.
+ * Función pura: sin efectos secundarios ni acceso al DOM.
+ * La traducción `esUrgente` → `urgente` ocurre en api.js, no aquí.
+ * Requirements: 6.1
+ * @param {AppState} estado
+ * @returns {{tipoCalzadoId: string, tipoReparacionIds: string[], esUrgente: boolean}}
+ */
+export function construirRequestCotizacion(estado) {
+  return {
+    tipoCalzadoId:     estado.tipoCalzadoId,
+    tipoReparacionIds: Array.from(estado.reparacionesIds),
+    esUrgente:         estado.esUrgente,
+  };
+}
+
+/**
+ * Maneja el click en `#btn-cotizar`: envía la cotización y renderiza el
+ * resultado o el error correspondiente. La selección del usuario nunca se
+ * modifica ante un error (Req 7.2).
+ * Requirements: 6.1, 6.2, 6.3, 7.1, 7.2, 7.3, 7.4
+ */
+export async function handleCotizar() {
+  const estado = getEstado();
+
+  // Req 6.2 / 5.6: ignorar clicks mientras hay una cotización en vuelo
+  if (estado.fase === 'cotizando') return;
+
+  const request = construirRequestCotizacion(estado);
+
+  limpiarError();
+  ocultarResultado();
+
+  // UI-E3: bloquear el botón durante la petición
+  setEstado({ fase: 'cotizando' });
+
+  try {
+    const cotizacion = await generarCotizacion(request);
+
+    // 201 Created → UI-E4
+    setEstado({ ultimaCotizacion: cotizacion, fase: 'resultado' });
+    try {
+      renderizarResultado(cotizacion);
+    } catch (_errRender) {
+      setEstado({ fase: 'error' });
+      mostrarError(MSG_ERROR_SERVIDOR);
+    }
+  } catch (err) {
+    setEstado({ fase: 'error' });
+
+    if (err instanceof ApiError && err.statusCode === 400) {
+      // Req 7.1/7.2: mostrar el detail del ProblemDetails; la selección queda intacta
+      mostrarError(err.detail);
+    } else if (err instanceof ApiError && err.statusCode === 0) {
+      // Req 7.3: error de red sin respuesta del servidor
+      mostrarError(MSG_ERROR_RED);
+    } else {
+      // Req 7.4: 5xx u otro error → mensaje genérico sin detalles técnicos
+      mostrarError(MSG_ERROR_SERVIDOR);
+    }
+  }
+}
+
+// ── Renderizado del resultado (Tarea 6.3) ────────────────────────────────────
+
+/**
+ * Escribe el desglose recibido del backend en el panel de resultado.
+ * Los valores se muestran tal cual llegan: no se recalcula ninguna operación
+ * aritmética en el cliente (Req 6.4, 9.5). El contenido se muta siempre,
+ * incluso si es idéntico al anterior, para forzar el anuncio de `aria-live`.
+ * Requirements: 6.3, 6.4, 9.4, 9.5
+ * @param {CotizacionResponse} cotizacion
+ */
+export function renderizarResultado(cotizacion) {
+  const moneda = cotizacion.moneda;
+
+  document.getElementById('resultado-subtotal').textContent =
+    moneda + ' ' + cotizacion.subtotal.toFixed(2);
+  document.getElementById('resultado-recargo').textContent =
+    moneda + ' ' + cotizacion.recargoUrgencia.toFixed(2);
+  document.getElementById('resultado-total').textContent =
+    moneda + ' ' + cotizacion.total.toFixed(2);
+  document.getElementById('resultado-tiempo').textContent =
+    String(cotizacion.tiempoEstimadoDias);
+
+  document.getElementById('resultado-cotizacion').removeAttribute('hidden');
+}
+
+/**
+ * Oculta el panel de resultado sin borrar su contenido.
+ * Requirements: 6.5, 8.1, 8.2, 8.3
+ */
+export function ocultarResultado() {
+  document.getElementById('resultado-cotizacion').setAttribute('hidden', '');
 }
 
 // ── Mensajes de error ─────────────────────────────────────────────────────────
@@ -174,7 +354,7 @@ function renderizarReparaciones(estado) {
  * Muestra un mensaje de error en #mensaje-error (sin modal).
  * @param {string} mensaje
  */
-function mostrarError(mensaje) {
+export function mostrarError(mensaje) {
   const el = document.getElementById('mensaje-error');
   el.textContent = mensaje;
   el.removeAttribute('hidden');
@@ -183,7 +363,7 @@ function mostrarError(mensaje) {
 /**
  * Oculta y vacía el mensaje de error en #mensaje-error.
  */
-function limpiarError() {
+export function limpiarError() {
   const el = document.getElementById('mensaje-error');
   el.textContent = '';
   el.setAttribute('hidden', '');
