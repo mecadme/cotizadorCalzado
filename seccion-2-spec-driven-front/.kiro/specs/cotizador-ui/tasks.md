@@ -46,8 +46,8 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
     - Usar `vi.stubGlobal('fetch', ...)` o equivalente para interceptar el fetch sin red real
     - _Requirements: 6.1_
 
-- [ ] 3. Módulo `js/state.js` — estado en memoria con Observer
-  - [ ] 3.1 Implementar `state.js` con `getEstado()`, `setEstado(cambios)` y `onCambio(callback)`
+- [x] 3. Módulo `js/state.js` — estado en memoria con Observer
+  - [x] 3.1 Implementar `state.js` con `getEstado()`, `setEstado(cambios)` y `onCambio(callback)`
     - Estado inicial: `{ catalogoCalzado: [], catalogoReparaciones: [], tipoCalzadoId: '', reparacionesIds: new Set(), esUrgente: false, ultimaCotizacion: null, fase: 'idle' }`
     - `export function getEstado()`: devuelve copia superficial del estado actual (no la referencia interna)
     - `export function setEstado(cambios)`: aplica los cambios al estado interno y notifica a todos los callbacks registrados con `onCambio`
@@ -61,20 +61,20 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
     - Verificar que `getEstado` devuelve copia y no la referencia interna (mutarla no afecta el estado)
     - _Requirements: 10.1–10.5_
 
-- [ ] 4. Módulo `js/app.js` — carga del catálogo y renderizado inicial
-  - [ ] 4.1 Implementar `init()` y `cargarCatalogo()` en `app.js`
+- [x] 4. Módulo `js/app.js` — carga del catálogo y renderizado inicial
+  - [x] 4.1 Implementar `init()` y `cargarCatalogo()` en `app.js`
     - `init()`: registrar el callback de `onCambio` con la función de renderizado, luego llamar `cargarCatalogo()`
     - `cargarCatalogo()`: transicionar `fase` a `'loading-catalogo'`, mostrar `#indicador-carga-catalogo`, deshabilitar todos los controles; usar `Promise.all([obtenerTiposCalzado(), obtenerTiposReparacion()])` para las dos peticiones simultáneas; si ambos arrays tienen al menos un elemento, llamar `renderizarCalzado` y `renderizarReparaciones` y transicionar a `fase: 'idle'` habilitando controles; si alguno falla o devuelve array vacío, transicionar a `fase: 'error'` y mostrar mensaje en `#mensaje-error`
     - Llamar `init()` al arrancar el módulo (nivel superior del script)
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-  - [ ] 4.2 Implementar `renderizarCalzado(estado)` en `app.js`
+  - [x] 4.2 Implementar `renderizarCalzado(estado)` en `app.js`
     - Vaciar el select `#tipo-calzado-select` conservando solo la opción placeholder
     - Añadir un `<option value="{id}">{nombre}</option>` por cada elemento de `estado.catalogoCalzado`
     - Habilitar `#tipo-calzado-select` si la fase no es `'loading-catalogo'`
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 4.3 Implementar `renderizarReparaciones(estado)` en `app.js`
+  - [x] 4.3 Implementar `renderizarReparaciones(estado)` en `app.js`
     - Vaciar el fieldset `#fs-reparaciones`
     - Por cada elemento de `estado.catalogoReparaciones`, crear `<label for="rep-{id}">` con `<input type="checkbox" id="rep-{id}" value="{id}" disabled>` + texto `{nombre} — $ {precioBase.toFixed(2)}`
     - Registrar listener `change` en cada checkbox recién creado que actualice `reparacionesIds` en el estado
