@@ -8,7 +8,11 @@
  * Dependencias: ninguna (no importa módulos del proyecto, no referencia DOM).
  */
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Ruta relativa: el navegador construye la URL desde el origen actual.
+// En Docker, Nginx intercepta /api/* y lo reenvía al backend en la red interna.
+// En desarrollo local (fuera de Docker), apunta a localhost:8080 si se cambia
+// a 'http://localhost:8080/api'.
+const API_BASE_URL = '/api';
 
 // ── Error estructurado ────────────────────────────────────────────────────────
 

@@ -58,7 +58,7 @@ services:
       - "${NGINX_PORT}:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro              # configuración principal
-      - ../seccion-2-spec-driven-front:/usr/share/nginx/html:ro  # frontend estático
+      - ../seccion-2-spec-driven-front/cotizador-frontend:/usr/share/nginx/html:ro  # frontend estático (spec-driven)
       - ./nginx/logs:/var/log/nginx                              # logs accesibles desde el host
     depends_on:
       - backend
