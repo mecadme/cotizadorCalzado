@@ -561,6 +561,44 @@
         "executionId": "4232524e-f107-4802-8b1d-a05da3396875",
         "chatSessionId": "sess_72262a55-63bf-4cf4-882c-b0a6dc4e8749",
         "timestamp": 1787362454606
+      },
+      {
+        "executionId": "4232524e-f107-4802-8b1d-a05da3396875",
+        "chatSessionId": "sess_72262a55-63bf-4cf4-882c-b0a6dc4e8749",
+        "timestamp": 1787362503782
+      }
+    ],
+    "1.2 Crear `css/estilos.css` con estilos visuales": [
+      {
+        "executionId": "1d14a042-d919-4128-8180-735a640126b3",
+        "chatSessionId": "sess_e54023ae-73a3-49d7-a9ca-82bc68bab788",
+        "timestamp": 1787362714572
+      }
+    ],
+    "1. Estructura base — `index.html` y `css/estilos.css`": [
+      {
+        "executionId": "1d14a042-d919-4128-8180-735a640126b3",
+        "chatSessionId": "sess_e54023ae-73a3-49d7-a9ca-82bc68bab788",
+        "timestamp": 1787362714646
+      }
+    ],
+    "2.1 Implementar `api.js` con las tres funciones exportadas y la clase `ApiError`": [
+      {
+        "executionId": "117217c9-dd3c-4833-949e-b91d4dd0c3b4",
+        "chatSessionId": "sess_672a49c0-13bf-447d-b48b-b4d7e4bdc10f",
+        "timestamp": 1787362765539
+      },
+      {
+        "executionId": "117217c9-dd3c-4833-949e-b91d4dd0c3b4",
+        "chatSessionId": "sess_672a49c0-13bf-447d-b48b-b4d7e4bdc10f",
+        "timestamp": 1787362830511
+      }
+    ],
+    "2. Módulo `js/api.js` — adaptador HTTP": [
+      {
+        "executionId": "117217c9-dd3c-4833-949e-b91d4dd0c3b4",
+        "chatSessionId": "sess_672a49c0-13bf-447d-b48b-b4d7e4bdc10f",
+        "timestamp": 1787362830638
       }
     ]
   }

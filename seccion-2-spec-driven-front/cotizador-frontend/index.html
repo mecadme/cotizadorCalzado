@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador de Reparación de Calzado</title>
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Cotizador de Reparación de Calzado</h1>
+  </header>
+
+  <main>
+
+    <!-- Indicador de carga del catálogo (visible durante UI-E1) -->
+    <div id="indicador-carga-catalogo" aria-live="polite" hidden>Cargando catálogo…</div>
+
+    <form id="cotizador-form" novalidate>
+
+      <!-- Selector de tipo de calzado -->
+      <fieldset id="fs-calzado">
+        <legend>Tipo de calzado</legend>
+        <label for="tipo-calzado-select">
+          Tipo de calzado <span aria-hidden="true">*</span>
+        </label>
+        <select id="tipo-calzado-select" disabled required>
+          <option value="" disabled selected>Selecciona un tipo</option>
+          <!-- opciones inyectadas dinámicamente por renderizarCalzado() -->
+        </select>
+      </fieldset>
+
+      <!-- Lista de tipos de reparación -->
+      <fieldset id="fs-reparaciones">
+        <legend>Tipos de reparación</legend>
+        <!-- checkboxes inyectados dinámicamente por renderizarReparaciones() -->
+        <!-- Patrón:
+          <label for="rep-{id}">
+            <input type="checkbox" id="rep-{id}" value="{id}" disabled>
+            {nombre} — $ {precioBase con 2 decimales}
+          </label>
+        -->
+      </fieldset>
+
+      <!-- Urgencia -->
+      <fieldset id="fs-urgencia">
+        <legend>Urgencia</legend>
+        <label for="urgencia-checkbox">
+          <input type="checkbox" id="urgencia-checkbox" disabled>
+          Servicio urgente (aplica recargo calculado por el servidor)
+        </label>
+      </fieldset>
+
+      <!-- Botón principal -->
+      <button type="button" id="btn-cotizar" disabled>Cotizar</button>
+
+      <!-- Zona de mensajes de error (assertive: interrumpe la lectura para errores críticos) -->
+      <div id="mensaje-error" role="alert" aria-live="assertive" hidden></div>
+
+    </form>
+
+    <!-- Panel de resultado (polite: no interrumpe; presente en el DOM desde la carga inicial) -->
+    <section id="resultado-cotizacion" aria-live="polite" hidden>
+      <h2>Desglose de cotización</h2>
+      <p>Subtotal: <span id="resultado-subtotal"></span></p>
+      <p>Recargo urgencia: <span id="resultado-recargo"></span></p>
+      <p><strong>Total: <span id="resultado-total"></span></strong></p>
+      <p>Tiempo estimado: <span id="resultado-tiempo"></span> día(s)</p>
+    </section>
+
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

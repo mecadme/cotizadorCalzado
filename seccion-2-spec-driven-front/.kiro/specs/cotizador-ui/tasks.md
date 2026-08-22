@@ -8,8 +8,8 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
 
 ## Tasks
 
-- [ ] 1. Estructura base — `index.html` y `css/estilos.css`
-  - [-] 1.1 Crear `index.html` con esqueleto semántico completo
+- [x] 1. Estructura base — `index.html` y `css/estilos.css`
+  - [x] 1.1 Crear `index.html` con esqueleto semántico completo
     - Incluir `<div id="indicador-carga-catalogo" aria-live="polite" hidden>` para el estado UI-E1
     - `<form id="cotizador-form" novalidate>` con tres fieldsets: `#fs-calzado`, `#fs-reparaciones`, `#fs-urgencia`
     - `<select id="tipo-calzado-select" disabled required>` con opción placeholder `<option value="" disabled selected>Selecciona un tipo</option>`
@@ -21,7 +21,7 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
     - Todos los controles inicialmente `disabled` para UI-E1
     - _Requirements: 1.2, 1.3, 2.2, 4.1, 5.1, 5.5, 6.5, 9.1, 9.2, 9.3, 9.4, 10.1–10.5_
 
-  - [ ] 1.2 Crear `css/estilos.css` con estilos visuales
+  - [x] 1.2 Crear `css/estilos.css` con estilos visuales
     - Layout principal (flexbox o grid) para la pantalla única
     - Estilos del fieldset de reparaciones para lista de checkboxes
     - Estilos del `#btn-cotizar[disabled]`: `opacity: 0.4; cursor: not-allowed;`
@@ -30,8 +30,8 @@ Implementar el Cotizador de Calzado como una aplicación web de página única u
     - Estilos del `#indicador-carga-catalogo` (visible durante UI-E1)
     - _Requirements: 5.5, 6.3, 7.1_
 
-- [ ] 2. Módulo `js/api.js` — adaptador HTTP
-  - [ ] 2.1 Implementar `api.js` con las tres funciones exportadas y la clase `ApiError`
+- [x] 2. Módulo `js/api.js` — adaptador HTTP
+  - [x] 2.1 Implementar `api.js` con las tres funciones exportadas y la clase `ApiError`
     - Declarar constante `API_BASE_URL = 'http://localhost:8080/api'`
     - Implementar `export async function obtenerTiposCalzado()`: GET a `/api/tipos-calzado`, devuelve `TipoCalzado[]`, lanza `ApiError` si no es 2xx o hay error de red
     - Implementar `export async function obtenerTiposReparacion()`: GET a `/api/tipos-reparacion`, devuelve `TipoReparacion[]`, lanza `ApiError` si no es 2xx o hay error de red
