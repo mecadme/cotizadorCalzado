@@ -18,8 +18,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql       # persistencia de datos
-      - ./mysql/init:/docker-entrypoint-initdb.d  # scripts SQL de inicialización (opcional)
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -28,7 +28,28 @@ services:
     networks:
       - tallerdae-net
 
+  # ── Backend Spring Boot ───────────────────────────────────
+  # Puerto 8080 NO expuesto al host; solo accesible dentro de la red interna.
+  # Nginx reenvía /api/* hacia este servicio via upstream "backend".
+  backend:
+    build:
+      context: ../seccion-2-spec-driven-back   # ruta relativa al Dockerfile
+      dockerfile: Dockerfile
+    container_name: tallerdae-backend
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL:      jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    # Sin "ports": el puerto 8080 permanece interno a la red Docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tallerdae-net
+
   # ── Servidor web Nginx ───────────────────────────────────
+  # Sirve el frontend estático y hace proxy inverso al backend en /api/
   nginx:
     image: nginx:alpine
     container_name: tallerdae-nginx
@@ -36,33 +57,13 @@ services:
     ports:
       - "${NGINX_PORT}:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro   # configuración principal
-      - ./nginx/html:/usr/share/nginx/html:ro         # contenido estático
-      - ./nginx/logs:/var/log/nginx                   # logs accesibles desde la máquina host
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro              # configuración principal
+      - ../seccion-2-spec-driven-front:/usr/share/nginx/html:ro  # frontend estático
+      - ./nginx/logs:/var/log/nginx                              # logs accesibles desde el host
     depends_on:
-      mysql:
-        condition: service_healthy
+      - backend
     networks:
       - tallerdae-net
-
-  # ── Backend (placeholder – descomentar cuando esté listo) ─
-  # backend:
-  #   build: ./backend
-  #   container_name: tallerdae-backend
-  #   restart: unless-stopped
-  #   environment:
-  #     DB_HOST: mysql
-  #     DB_PORT: 3306
-  #     DB_NAME: ${MYSQL_DATABASE}
-  #     DB_USER: ${MYSQL_USER}
-  #     DB_PASS: ${MYSQL_PASSWORD}
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     mysql:
-  #       condition: service_healthy
-  #   networks:
-  #     - tallerdae-net
 
 # ── Volúmenes ────────────────────────────────────────────
 volumes:

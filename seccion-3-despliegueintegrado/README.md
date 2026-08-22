@@ -1,1 +1,0 @@
-# Sección 3 — Vibe Coding con Kiro
